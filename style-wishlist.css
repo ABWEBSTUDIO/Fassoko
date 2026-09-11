@@ -161,7 +161,7 @@ body.loading{
 }
 /* ---------- hero ---------- */
 .hero{
-  background:url(images/fruits&vegetables.png);
+  background:url(images/abba\ hero\ banner.png);
  
   padding:56px 0 70px;
   overflow:hidden;
@@ -685,7 +685,12 @@ body.loading{
 .shop-hero-copy p{font-size:13px;max-width:460px;color:#e3f3e8;margin:0}
 
 .shop-body{padding:42px 0 70px;background:#fff}
-.shop-layout{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start}
+.shop-layout{display:grid;
+  /* grid-template-columns:280px 1fr; */
+  gap:32px;align-items:start}
+.shop-grid{
+grid-template-columns:repeat(6,1fr);gap:9px
+}
 
 /* ---------- sidebar ---------- */
 .shop-sidebar{
@@ -980,7 +985,7 @@ body.menu-open,body.qv-open{overflow:hidden}
   font-family:"Manrope",Arial,sans-serif;font-size:12px;font-weight:800
 }
 .wishlist-heading p{margin:0;color:var(--ink-soft);font-size:12px}
-.wishlist-grid{grid-template-columns:repeat(4,1fr)}
+.wishlist-grid{grid-template-columns:repeat(6,1fr)}
 .wishlist-empty{
   min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;border:1px dashed var(--line);border-radius:20px;background:var(--cream);padding:40px 20px
@@ -1001,7 +1006,7 @@ body.menu-open,body.qv-open{overflow:hidden}
 .wishlist-toggle:hover{transform:scale(1.08);color:var(--forest)}
 .wishlist-toggle.active{background:var(--forest);color:#fff}
 @media(max-width:900px){
-  .wishlist-grid{grid-template-columns:repeat(2,1fr)}
+  .wishlist-grid{grid-template-columns:repeat(3,1fr)}
   .wishlist-heading{align-items:flex-start;flex-direction:column}
 }
 @media(max-width:520px){
