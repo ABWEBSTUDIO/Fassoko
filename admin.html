@@ -7,6 +7,7 @@
 <link rel="icon" type="image/png" href="images/favicon.png" style="border-radius: 5px;">
 <link rel="shortcut icon" href="images/favicon.png" style="border-radius: 5px; height: 60px;" >
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <style>
 :root{
   --green:#123b2a;--green2:#1d6b49;--lime:#d9f36a;--bg:#f4f7f5;
@@ -2800,17 +2801,6 @@ tbody tr:hover{background:#fbfdfc}
 #products tr:hover{background:#fbfdfc}
 @media(max-width:1100px){.product-stats{grid-template-columns:repeat(2,1fr)}.checks{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.product-stats,.checks{grid-template-columns:1fr}.product-placement{padding:14px}}
-</style>
-
-<style id="fassoko-invoice-print-styles">
-.invoice-preview-overlay{position:fixed;inset:0;background:rgba(15,25,20,.58);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
-.invoice-preview{width:min(900px,100%);background:#fff;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.28);overflow:hidden}
-.invoice-preview-toolbar{display:flex;justify-content:flex-end;gap:10px;padding:14px 18px;background:#f5f8f6;border-bottom:1px solid #dfe7e2;position:sticky;top:0;z-index:2}
-.invoice-paper{padding:34px 42px;color:#18231d;font-family:Arial,Helvetica,sans-serif;background:#fff}
-.invoice-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;border-bottom:3px solid #168447;padding-bottom:18px}
-.invoice-brand{display:flex;gap:16px;align-items:center}.invoice-brand img{width:92px;height:92px;object-fit:contain}.invoice-brand h1{margin:0;font-size:27px;letter-spacing:.5px}.invoice-brand p{margin:5px 0 0;color:#65736d;font-size:13px;line-height:1.5}.invoice-title{text-align:right}.invoice-title h2{margin:0;font-size:30px;letter-spacing:1px}.invoice-title p{margin:6px 0 0;font-size:13px;color:#65736d}.invoice-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}.invoice-box{border:1px solid #dfe7e2;border-radius:10px;padding:14px}.invoice-box .label{display:block;text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:1px;color:#718078;margin-bottom:6px}.invoice-box strong{display:block;font-size:14px}.invoice-box span{display:block;font-size:13px;line-height:1.5;color:#4d5b53}.invoice-table{width:100%;border-collapse:collapse;margin-top:10px}.invoice-table th{background:#f0f5f2;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:11px 10px}.invoice-table td{padding:12px 10px;border-bottom:1px solid #e6ece8;font-size:13px}.invoice-table .num{text-align:right}.invoice-summary{margin-left:auto;width:min(360px,100%);margin-top:18px}.invoice-summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px}.invoice-summary-row.total{border-top:2px solid #18231d;margin-top:5px;padding-top:12px;font-size:17px;font-weight:800}.invoice-payment-message{margin-top:24px;border:2px solid #168447;border-radius:12px;padding:15px;background:#f3faf6}.invoice-payment-message .label{display:block;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#168447;margin-bottom:6px}.invoice-payment-message .value{font-size:15px;font-weight:800;word-break:break-word}.invoice-footer{margin-top:30px;padding-top:16px;border-top:1px solid #dfe7e2;display:grid;grid-template-columns:1fr 1fr;gap:24px;color:#64736a;font-size:11px}.invoice-signatures{margin-top:34px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.invoice-signatures div{border-top:1px solid #8b9891;padding-top:7px;font-size:11px;color:#64736a}.invoice-status{display:inline-block;padding:5px 9px;border-radius:999px;background:#fff4dc;color:#8a5a00;font-weight:800;font-size:11px;text-transform:uppercase}.invoice-status.paid{background:#e7f7ee;color:#17633f}.invoice-status.rejected{background:#fde8e8;color:#a12b2b}
-@media(max-width:650px){.invoice-paper{padding:22px 18px}.invoice-head{flex-direction:column}.invoice-title{text-align:left}.invoice-meta{grid-template-columns:1fr}.invoice-footer,.invoice-signatures{grid-template-columns:1fr}.invoice-brand img{width:72px;height:72px}}
-@media print{body>*:not(.invoice-print-root){display:none!important}.invoice-preview-overlay{position:static;background:#fff;padding:0;display:block}.invoice-preview{width:100%;box-shadow:none;border-radius:0}.invoice-preview-toolbar{display:none!important}.invoice-paper{padding:20px}.invoice-preview-overlay *{visibility:visible!important}}
 </style>
 </head>
 <body>
@@ -7531,8 +7521,12 @@ async function loadOrders(){
           <button class="order-view-btn" onclick="viewOrder(${order.id})">
             <span>◉</span> View Details
           </button>
-          <button class="order-view-btn" style="margin-top:6px" onclick="printOrderInvoice(${order.id})">
-            <span>▣</span> Invoice
+          <button
+            class="order-view-btn"
+            style="margin-top:6px;"
+            onclick="downloadOrderInvoice(${order.id})"
+          >
+            <span>⬇</span> Invoice
           </button>
         </td>
 
@@ -7572,6 +7566,274 @@ function getPaymentReference(order) {
   const notes = String(order?.notes || "");
   const match = notes.match(/Payment reference:\s*([^|]*)/i);
   return match ? match[1].trim() : "";
+}
+
+function getOrderNumber(order) {
+  const notes = String(order?.notes || "");
+  const match = notes.match(/Order number:\s*([^|]*)/i);
+  return match ? match[1].trim() : String(order?.id || "N/A");
+}
+
+function getPaymentMethodFromOrder(order) {
+  const notes = String(order?.notes || "");
+  const match = notes.match(/Payment method:\s*([^|]*)/i);
+  return match ? match[1].trim() : "Not provided";
+}
+
+// ============================================================
+// DOWNLOADABLE INVOICE (admin panel)
+// Builds the exact same styled invoice PDF as the order
+// notification email (logo, table, totals, signature footer),
+// so admins can pull the invoice straight from the orders list.
+// ============================================================
+function invoiceFormatMoney(value) {
+  return Number(value || 0).toLocaleString("en-US") + " RWF";
+}
+
+function invoiceWrapText(text, font, size, maxWidth) {
+  const words = String(text || "").split(/\s+/).filter(Boolean);
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word;
+    if (font.widthOfTextAtSize(test, size) > maxWidth && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines.length ? lines : [""];
+}
+
+async function buildOrderInvoicePdfBytes(order) {
+  const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+
+  const pdfDoc = await PDFDocument.create();
+  let page = pdfDoc.addPage([595.28, 841.89]); // A4
+  const { width, height } = page.getSize();
+
+  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  const black = rgb(0.07, 0.07, 0.07);
+  const gray = rgb(0.4, 0.4, 0.4);
+  const lineColor = rgb(0.72, 0.72, 0.72);
+  const white = rgb(1, 1, 1);
+
+  const marginX = 45;
+  let y = height - 55;
+
+  // Logo (top-left)
+  try {
+    const logoBytes = await fetch("images/fassoko-invoice-logo.png").then(r => r.arrayBuffer());
+    const logoImage = await pdfDoc.embedPng(logoBytes);
+    const logoSize = 88;
+    page.drawImage(logoImage, {
+      x: marginX,
+      y: y - logoSize + 14,
+      width: logoSize,
+      height: logoSize,
+    });
+  } catch (e) {
+    console.error("INVOICE LOGO EMBED FAILED:", e);
+  }
+
+  // Company block (top-right)
+  const companyLines = [
+    { text: "FASSOKO", font: fontBold, size: 16, color: black },
+    { text: "Faster shopping starts here", font: fontRegular, size: 9, color: gray },
+    { text: "Rwanda", font: fontRegular, size: 9, color: gray },
+    { text: "+250785586014", font: fontRegular, size: 9, color: gray },
+    { text: "nshizimpakajeanclaude@gmail.com", font: fontRegular, size: 9, color: gray },
+  ];
+  let compY = y;
+  for (const l of companyLines) {
+    const tw = l.font.widthOfTextAtSize(l.text, l.size);
+    page.drawText(l.text, { x: width - marginX - tw, y: compY, size: l.size, font: l.font, color: l.color });
+    compY -= l.size + 5;
+  }
+
+  y -= 112;
+
+  // INVOICE heading
+  page.drawText("INVOICE", { x: marginX, y, size: 26, font: fontBold, color: black });
+  y -= 36;
+
+  const orderNumber = getOrderNumber(order);
+  const invoiceDate = order.created_at
+    ? new Date(order.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
+    : new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
+
+  const col1X = marginX;
+  const col2X = marginX + 175;
+  const col3X = marginX + 350;
+  const infoTop = y;
+
+  const drawLabelValue = (x, label, lines, colWidth) => {
+    let cy = infoTop;
+    page.drawText(label, { x, y: cy, size: 10, font: fontBold, color: black });
+    cy -= 15;
+    for (const ln of lines) {
+      for (const wrapped of invoiceWrapText(ln, fontRegular, 9, colWidth)) {
+        page.drawText(wrapped, { x, y: cy, size: 9, font: fontRegular, color: gray });
+        cy -= 13;
+      }
+    }
+    return cy;
+  };
+
+  const yAfter1 = drawLabelValue(
+    col1X,
+    "Customer",
+    [order.customer_name || "Not provided", order.customer_phone || "", order.customer_email || ""].filter(Boolean),
+    160
+  );
+  const yAfter2 = drawLabelValue(col2X, "Ship To", [order.delivery_address || "Not provided"], 160);
+  const yAfter3 = drawLabelValue(
+    col3X,
+    "Order Details",
+    [
+      `Invoice #: ${orderNumber}`,
+      `Order #: ${orderNumber}`,
+      `Date: ${invoiceDate}`,
+      `Payment: ${getPaymentMethodFromOrder(order)}`,
+    ],
+    175
+  );
+
+  y = Math.min(yAfter1, yAfter2, yAfter3) - 22;
+
+  // Items table
+  const tableX = marginX;
+  const tableWidth = width - marginX * 2;
+  const colProductW = tableWidth * 0.55;
+  const colQtyW = tableWidth * 0.18;
+
+  page.drawRectangle({ x: tableX, y: y - 22, width: tableWidth, height: 24, color: black });
+  page.drawText("Product", { x: tableX + 8, y: y - 15, size: 10, font: fontBold, color: white });
+
+  const qtyLabel = "Quantity";
+  page.drawText(qtyLabel, {
+    x: tableX + colProductW + colQtyW / 2 - fontBold.widthOfTextAtSize(qtyLabel, 10) / 2,
+    y: y - 15, size: 10, font: fontBold, color: white,
+  });
+
+  const priceLabel = "Price";
+  page.drawText(priceLabel, {
+    x: tableX + tableWidth - 8 - fontBold.widthOfTextAtSize(priceLabel, 10),
+    y: y - 15, size: 10, font: fontBold, color: white,
+  });
+
+  y -= 34;
+
+  const items = order.order_items || [];
+  let subtotal = 0;
+
+  for (const item of items) {
+    const quantity = Number(item.quantity || 0);
+    const price = Number(item.price || 0);
+    const itemSubtotal = Number(item.subtotal ?? quantity * price);
+    subtotal += itemSubtotal;
+
+    const name = String(item.product_name || "Product");
+    const nameLines = invoiceWrapText(name, fontRegular, 10, colProductW - 16);
+
+    if (y < 150) {
+      page = pdfDoc.addPage([595.28, 841.89]);
+      y = height - 55;
+    }
+
+    const rowStartY = y;
+    for (const ln of nameLines) {
+      page.drawText(ln, { x: tableX + 8, y, size: 10, font: fontRegular, color: black });
+      y -= 13;
+    }
+
+    const qtyText = String(quantity);
+    page.drawText(qtyText, {
+      x: tableX + colProductW + colQtyW / 2 - fontRegular.widthOfTextAtSize(qtyText, 10) / 2,
+      y: rowStartY, size: 10, font: fontRegular, color: black,
+    });
+
+    const priceText = invoiceFormatMoney(price);
+    page.drawText(priceText, {
+      x: tableX + tableWidth - 8 - fontRegular.widthOfTextAtSize(priceText, 10),
+      y: rowStartY, size: 10, font: fontRegular, color: black,
+    });
+
+    y -= 6;
+    page.drawLine({ start: { x: tableX, y }, end: { x: tableX + tableWidth, y }, thickness: 0.5, color: lineColor });
+    y -= 14;
+  }
+
+  y -= 10;
+
+  const total = Number(order.total_amount || 0);
+  const delivery = Math.max(0, total - subtotal);
+
+  const totalsBoxW = 230;
+  const totalsX = tableX + tableWidth - totalsBoxW;
+
+  const drawTotalLine = (label, value, bold, big) => {
+    const size = big ? 13 : 10;
+    const font = bold ? fontBold : fontRegular;
+    page.drawText(label, { x: totalsX, y, size, font, color: black });
+    const vw = font.widthOfTextAtSize(value, size);
+    page.drawText(value, { x: totalsX + totalsBoxW - vw, y, size, font, color: black });
+    y -= size + 10;
+  };
+
+  page.drawLine({ start: { x: totalsX, y: y + 4 }, end: { x: totalsX + totalsBoxW, y: y + 4 }, thickness: 0.5, color: lineColor });
+  y -= 2;
+  drawTotalLine("Subtotal", invoiceFormatMoney(subtotal), false, false);
+  drawTotalLine("Delivery Fee", invoiceFormatMoney(delivery), false, false);
+  page.drawLine({ start: { x: totalsX, y: y + 8 }, end: { x: totalsX + totalsBoxW, y: y + 8 }, thickness: 1.2, color: black });
+  y -= 2;
+  drawTotalLine("Total", invoiceFormatMoney(total), true, true);
+  page.drawLine({ start: { x: totalsX, y: y + 8 }, end: { x: totalsX + totalsBoxW, y: y + 8 }, thickness: 1.2, color: black });
+
+  // Signature footer
+  const footerY = 90;
+  page.drawLine({ start: { x: marginX, y: footerY + 22 }, end: { x: width - marginX, y: footerY + 22 }, thickness: 0.5, color: lineColor });
+  page.drawText(
+    "Receiver (Names & Signature) by: ........................................................",
+    { x: marginX, y: footerY, size: 9, font: fontRegular, color: gray }
+  );
+  page.drawText(
+    "Prepared by: ........................................   Verified by: ........................................",
+    { x: marginX, y: footerY - 16, size: 9, font: fontRegular, color: gray }
+  );
+  page.drawText(
+    "Authorized by: ......................................   Delivered by: ......................................",
+    { x: marginX, y: footerY - 32, size: 9, font: fontRegular, color: gray }
+  );
+
+  return pdfDoc.save();
+}
+
+window.downloadOrderInvoice = async function (orderId) {
+  const order = (window.adminOrders || []).find(o => o.id === orderId);
+  if (!order) {
+    alert("Order not found.");
+    return;
+  }
+  try {
+    const pdfBytes = await buildOrderInvoicePdfBytes(order);
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Fassoko-Invoice-${getOrderNumber(order).replace(/[^a-zA-Z0-9-_]/g, "-")}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch (e) {
+    console.error("INVOICE GENERATION FAILED:", e);
+    alert("Could not generate the invoice. Please try again.");
+  }
 }
 
 window.confirmMobileMoneyPayment = async function(orderId) {
@@ -7734,64 +7996,6 @@ window.confirmMobileMoneyPayment = async function(orderId) {
   }
 };
 
-window.printOrderInvoice = async function(orderId){
-  const order = (window.adminOrders || []).find(o => Number(o.id) === Number(orderId));
-  if(!order){ alert("Order not found."); return; }
-  let settings = {};
-  try {
-    const {data} = await client.from("store_settings").select("store_name,logo_url,email,phone,whatsapp,store_address,currency").eq("id","store").maybeSingle();
-    settings = data || {};
-  } catch(e) { console.warn("Could not load store settings for invoice", e); }
-  const logo = settings.logo_url || "images/logo.png";
-  const currency = settings.currency || "RWF";
-  const noteText = String(order.notes || "");
-  const orderNumberMatch = noteText.match(/Order number:\s*([^|]+)/i);
-  const invoiceNo = order.order_number || (orderNumberMatch ? orderNumberMatch[1].trim() : ("BZ" + String(order.id).padStart(8,"0")));
-  const paymentMethodMatch = noteText.match(/Payment method:\s*([^|]+)/i);
-  const paymentMethod = order.payment_method || (paymentMethodMatch ? paymentMethodMatch[1].trim() : "Mobile Money");
-  const date = order.created_at ? new Date(order.created_at).toLocaleString() : new Date().toLocaleString();
-  const paymentMessage = getPaymentReference(order) || "Not submitted";
-  const status = String(order.payment_status || "unpaid").toLowerCase();
-  const statusClass = status === "paid" ? "paid" : (status === "rejected" ? "rejected" : "");
-  const items = order.order_items || [];
-  const itemsHTML = items.length ? items.map((item, i) => `
-    <tr><td>${i+1}</td><td><strong>${esc(item.product_name || "Product")}</strong></td><td class="num">${Number(item.quantity||0)}</td><td class="num">${Number(item.price||0).toLocaleString()} ${esc(currency)}</td><td class="num">${Number(item.subtotal||0).toLocaleString()} ${esc(currency)}</td></tr>
-  `).join("") : `<tr><td colspan="5">No products found.</td></tr>`;
-  const subtotal = items.reduce((sum,i)=>sum+Number(i.subtotal||0),0);
-  const total = Number(order.total_amount||0);
-  const delivery = Math.max(0,total-subtotal);
-  const html = `
-    <div class="invoice-print-root invoice-preview-overlay" onclick="if(event.target===this)this.remove()">
-      <div class="invoice-preview">
-        <div class="invoice-preview-toolbar">
-          <button class="btn soft" type="button" onclick="this.closest('.invoice-preview-overlay').remove()">Close</button>
-          <button class="btn primary" type="button" onclick="window.print()">Print / Save PDF</button>
-        </div>
-        <div class="invoice-paper">
-          <div class="invoice-head">
-            <div class="invoice-brand">
-              <img src="${esc(logo)}" alt="Fassoko logo" onerror="this.src='images/logo.png'">
-              <div><h1>${esc(settings.store_name || "Fassoko")}</h1><p>${esc(settings.store_address || "Rwanda")}</p><p>${esc(settings.email || "")} ${settings.phone ? " • "+esc(settings.phone) : ""}</p></div>
-            </div>
-            <div class="invoice-title"><h2>INVOICE</h2><p>Invoice # <strong>${esc(invoiceNo)}</strong></p><p>Order # <strong>${esc(invoiceNo)}</strong></p><p>${esc(date)}</p></div>
-          </div>
-          <div class="invoice-meta">
-            <div class="invoice-box"><span class="label">Bill To</span><strong>${esc(order.customer_name || "Customer")}</strong><span>${esc(order.customer_phone || "")}</span><span>${esc(order.customer_email || "")}</span></div>
-            <div class="invoice-box"><span class="label">Ship To</span><strong>Delivery address</strong><span>${esc(order.delivery_address || "-")}</span></div>
-            <div class="invoice-box"><span class="label">Payment</span><strong>${esc(paymentMethod)}</strong><span>Status: <span class="invoice-status ${statusClass}">${esc(status.replaceAll("_"," "))}</span></span></div>
-            <div class="invoice-box"><span class="label">Payment Transaction Message</span><strong>${esc(paymentMessage)}</strong><span>This is the message/reference submitted by the customer.</span></div>
-          </div>
-          <table class="invoice-table"><thead><tr><th>#</th><th>Product</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Amount</th></tr></thead><tbody>${itemsHTML}</tbody></table>
-          <div class="invoice-summary"><div class="invoice-summary-row"><span>Subtotal</span><strong>${subtotal.toLocaleString()} ${esc(currency)}</strong></div><div class="invoice-summary-row"><span>Delivery</span><strong>${delivery.toLocaleString()} ${esc(currency)}</strong></div><div class="invoice-summary-row total"><span>Total</span><strong>${total.toLocaleString()} ${esc(currency)}</strong></div></div>
-          <div class="invoice-payment-message"><span class="label">Customer payment message / transaction ID</span><div class="value">${esc(paymentMessage)}</div></div>
-          <div class="invoice-signatures"><div>Prepared by: __________________</div><div>Verified by: __________________</div><div>Authorized by: ________________</div></div>
-          <div class="invoice-footer"><div><strong>${esc(settings.store_name || "Fassoko")}</strong><br>${esc(settings.store_address || "Rwanda")}</div><div style="text-align:right">Invoice ${esc(invoiceNo)} • Order ${esc(invoiceNo)}<br>Generated ${esc(new Date().toLocaleString())}</div></div>
-        </div>
-      </div>
-    </div>`;
-  document.body.insertAdjacentHTML("beforeend", html);
-};
-
 window.viewOrder = function(orderId){
 
   const order =
@@ -7881,7 +8085,6 @@ window.viewOrder = function(orderId){
 
           <div class="order-modal-actions">
             <button class="btn soft" type="button" onclick="this.closest('.order-modal-overlay').remove()">Close</button>
-            <button class="btn primary" type="button" onclick="printOrderInvoice(${order.id})">Invoice / Print</button>
             <button class="btn danger order-delete-btn" type="button" onclick="deleteOrder(${order.id})">Delete Order</button>
           </div>
         </div>

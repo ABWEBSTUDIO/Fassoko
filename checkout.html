@@ -213,26 +213,9 @@
 <div class="modal" id="successModal">
   <div class="success-box payment-success-box">
     <div class="success-icon">✓</div>
-    <h2 id="successTitle">Order received!</h2>
-    <p id="successText">Your order has been created. Please complete your Mobile Money payment and submit the transaction details below.</p>
+    <h2 id="successTitle">Order placed!</h2>
+    <p id="successText">Thank you for shopping with Fassoko. Your order has been received.</p>
     <div class="order-number" id="orderNumber"></div>
-
-    <div id="mobileMoneyPaymentStep" class="post-order-payment" hidden>
-      <div class="post-order-payment-instructions">
-        <strong>Complete your payment</strong>
-        <span id="postOrderAmount"></span>
-        <p>MTN MoMo: <b id="postOrderMtnCode"></b></p>
-        <small>Account name: <b>Buyzoo24 COM LTD</b></small>
-        <p>Airtel Money: <b>*182*1*2*0788877475*AMOUNT#</b></p>
-      </div>
-
-      <form id="paymentConfirmationForm">
-        <label for="postOrderPaymentReference">Transaction ID / payment confirmation message <b>*</b></label>
-        <textarea id="postOrderPaymentReference" rows="3" required placeholder="Enter the transaction ID or the payment confirmation message you received after paying"></textarea>
-        <button type="submit" id="submitPaymentConfirmation">SUBMIT PAYMENT DETAILS</button>
-      </form>
-      <div id="paymentConfirmationMessage" class="payment-confirmation-message" hidden></div>
-    </div>
 
     <button id="done">CONTINUE SHOPPING</button>
   </div>

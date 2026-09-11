@@ -205,7 +205,7 @@ body.loading{
     content: "";
     position: absolute;
     inset: 0;
-    background: url("abba hero banner.png") center / contain no-repeat;
+    background: url("images/abba hero banner.png") center / contain no-repeat;
     filter: blur(1px);
     transform: scale(1.05);
     z-index: -1;
@@ -6663,19 +6663,10 @@ body {
    RESPONSIVE
 ===================================================== */
 
-@media (max-width: 1300px) {
+@media (max-width: 950px) {
 
     .new-arrival-card {
         flex-basis: calc((100% - 60px) / 4);
-    }
-
-}
-
-
-@media (max-width: 1000px) {
-
-    .new-arrival-card {
-        flex-basis: calc((100% - 40px) / 3);
     }
 
 
@@ -6687,7 +6678,7 @@ body {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 650px) {
 
     .new-arrivals-header {
         align-items: flex-start;
@@ -6707,7 +6698,7 @@ body {
 
 
     .new-arrival-card {
-        flex-basis: calc((100% - 0px) / 3);
+        flex-basis: calc((100% - 20px) / 2);
     }
 
 
@@ -6718,7 +6709,7 @@ body {
 }
 
 
-@media (max-width: 500px) {
+@media (max-width: 650px) {
 
     .new-arrivals-section {
         padding:
@@ -6752,7 +6743,7 @@ body {
 
 
     .new-arrival-card {
-        flex: 0 0 82%;
+        flex: 0 0 calc((100% - 20px) / 2);
 
         min-width: 0;
     }
@@ -6812,4 +6803,13 @@ body {
   .hero::before{
     background-size:cover;
   }
+}
+
+/* ---------- wishlist page grid: 6 / 4 / 2 columns ---------- */
+#wishlistGrid.shop-grid{grid-template-columns:repeat(6,1fr)}
+@media(max-width:950px){
+  #wishlistGrid.shop-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:650px){
+  #wishlistGrid.shop-grid{grid-template-columns:repeat(2,1fr);gap:9px}
 }

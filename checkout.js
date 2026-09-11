@@ -591,17 +591,7 @@ async function sendAdminOrderNotification(data) {
           price: Number(item.price || 0), subtotal: Number(item.subtotal || 0)
         })),
         subtotal: Number(data.subtotal || 0), delivery: Number(data.delivery || 0),
-        total: Number(data.total || 0),
-        invoice_number: data.orderNumber || data.orderId,
-        payment_message: data.paymentReference || null,
-        logo_url: data.logoUrl || (window.location.origin + "/images/logo.png"),
-        invoice: {
-          number: data.orderNumber || data.orderId,
-          order_number: data.orderNumber || data.orderId,
-          payment_message: data.paymentReference || null,
-          payment_status: data.paymentStatus || "unpaid",
-          logo_url: data.logoUrl || (window.location.origin + "/images/logo.png")
-        }
+        total: Number(data.total || 0)
       }
     });
     if (notificationError) { console.error("ADMIN NOTIFICATION ERROR:", notificationError); return false; }
@@ -609,51 +599,6 @@ async function sendAdminOrderNotification(data) {
     return true;
   } catch (error) { console.error("ADMIN NOTIFICATION FAILED:", error); return false; }
 }
-
-// CUSTOMER SUBMITS MOBILE MONEY TRANSACTION DETAILS
-async function submitMobileMoneyPaymentConfirmation(e) {
-  e.preventDefault();
-  const pending = window.pendingMobileMoneyOrder || JSON.parse(localStorage.getItem("fassokoPendingMobileMoneyOrder") || "null");
-  const referenceEl = document.getElementById("postOrderPaymentReference");
-  const submitBtn = document.getElementById("submitPaymentConfirmation");
-  const messageEl = document.getElementById("paymentConfirmationMessage");
-  if (!pending?.orderId) {
-    if (messageEl) { messageEl.hidden = false; messageEl.textContent = "We could not find your pending order. Please contact Fassoko."; }
-    return;
-  }
-  const reference = referenceEl?.value.trim() || "";
-  if (!reference) { referenceEl?.focus(); toast("Please enter your transaction ID or payment confirmation message."); return; }
-  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "SUBMITTING..."; }
-  try {
-    const { data: currentOrder, error: fetchError } = await supabaseClient.from("orders").select("id, notes, payment_status").eq("id", pending.orderId).single();
-    if (fetchError) throw fetchError;
-    const existingNotes = String(currentOrder.notes || "");
-    const cleanedNotes = existingNotes.replace(/Payment reference:\s*[^|]*/ig, "").replace(/\s*\|\s*\|/g, " | ").replace(/^\s*\|\s*|\s*\|\s*$/g, "").trim();
-    const updatedNotes = [cleanedNotes, `Payment reference: ${reference}`, `Payment details submitted at: ${new Date().toISOString()}`].filter(Boolean).join(" | ");
-    const { error: updateError } = await supabaseClient.from("orders").update({ notes: updatedNotes, payment_status: "awaiting_verification" }).eq("id", pending.orderId);
-    if (updateError) throw updateError;
-    const sent = await sendAdminOrderNotification({
-      ...pending,
-      paymentStatus: "awaiting_verification",
-      paymentReference: reference,
-      logoUrl: window.location.origin + "/images/logo.png"
-    });
-    localStorage.removeItem("fassokoPendingMobileMoneyOrder");
-    window.pendingMobileMoneyOrder = null;
-    if (messageEl) { messageEl.hidden = false; messageEl.textContent = sent ? "Payment details submitted successfully. Fassoko will verify the payment and confirm your order." : "Payment details were saved. Fassoko will verify the payment and confirm your order."; }
-    if (referenceEl) referenceEl.disabled = true;
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "PAYMENT DETAILS SUBMITTED ✓"; }
-    const successText = document.getElementById("successText");
-    if (successText) successText.textContent = "Your payment details have been submitted. We will confirm your order after verifying the funds received.";
-  } catch (error) {
-    console.error("MOBILE MONEY PAYMENT SUBMISSION ERROR:", error);
-    toast(error.message || "Could not submit payment details. Please try again.");
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "SUBMIT PAYMENT DETAILS"; }
-  }
-}
-
-const paymentConfirmationForm = document.getElementById("paymentConfirmationForm");
-if (paymentConfirmationForm) paymentConfirmationForm.addEventListener("submit", submitMobileMoneyPaymentConfirmation);
 
 // PLACE ORDER
 // ============================================
@@ -840,10 +785,6 @@ document
           .value
           .trim();
 
-      const isMobileMoney =
-        paymentEl.value === "Mobile Money";
-
-
       const submitButton =
         document
           .getElementById("placeDesktop");
@@ -929,9 +870,7 @@ console.log(
               "pending",
 
             payment_status:
-              isMobileMoney
-                ? "awaiting_verification"
-                : "unpaid",
+              "unpaid",
 
             notes: [
 
@@ -943,9 +882,7 @@ console.log(
 
               // Machine-readable marker used by the admin
               // to prevent accidental stock restoration/double deduction.
-              isMobileMoney
-                ? "Stock deducted: no"
-                : "Stock deducted: yes",
+              "Stock deducted: yes",
 
               notes
 
@@ -1036,49 +973,42 @@ const orderItems =
 // ====================================
 // REDUCE PRODUCT STOCK SECURELY
 // ====================================
-// Mobile Money stock is NOT deducted until an admin
-// verifies that the funds were actually received.
-// Cash on Delivery keeps the existing immediate deduction.
+// Stock is deducted immediately for every order, regardless of
+// the payment method chosen. Mobile Money verification is handled
+// separately by Fassoko later — it no longer blocks stock deduction.
 
-if (!isMobileMoney) {
+for (const item of cart) {
 
-  for (const item of cart) {
+  const quantityBought = Number(item.qty || 0);
 
-    const quantityBought = Number(item.qty || 0);
-
-    if (quantityBought <= 0) {
-      console.error("INVALID QUANTITY:", item);
-      continue;
-    }
-
-    const { error: stockError } = await supabaseClient
-      .rpc("reduce_product_stock", {
-        p_product_id: Number(item.id),
-        p_quantity: quantityBought
-      });
-
-    if (stockError) {
-      console.error("FAILED TO REDUCE STOCK:", stockError);
-      throw stockError;
-    }
+  if (quantityBought <= 0) {
+    console.error("INVALID QUANTITY:", item);
+    continue;
   }
 
+  const { error: stockError } = await supabaseClient
+    .rpc("reduce_product_stock", {
+      p_product_id: Number(item.id),
+      p_quantity: quantityBought
+    });
+
+  if (stockError) {
+    console.error("FAILED TO REDUCE STOCK:", stockError);
+    throw stockError;
+  }
 }
 
 // ====================================
 // SEND EMAIL, SMS AND FULL INVOICE TO ADMIN
-// Cash on Delivery is notified immediately. Mobile Money is notified
-// only after the customer submits the transaction details.
-if (!isMobileMoney) {
-  await sendAdminOrderNotification({
-    orderId: createdOrder.id, orderNumber, customerName, customerPhone,
-    customerEmail,
-    deliveryAddress: [district, area, address].filter(Boolean).join(", "),
-    paymentMethod: paymentEl.value, paymentStatus: "unpaid", paymentReference: null,
-    orderItems, subtotal: sub, delivery, total,
-    logoUrl: window.location.origin + "/images/logo.png"
-  });
-}
+// Every order is notified immediately, regardless of payment method.
+// Mobile Money verification is handled separately by Fassoko later.
+await sendAdminOrderNotification({
+  orderId: createdOrder.id, orderNumber, customerName, customerPhone,
+  customerEmail,
+  deliveryAddress: [district, area, address].filter(Boolean).join(", "),
+  paymentMethod: paymentEl.value, paymentStatus: "unpaid", paymentReference: null,
+  orderItems, subtotal: sub, delivery, total
+});
 
 // SAVE LAST ORDER
         // ====================================
@@ -1187,29 +1117,11 @@ if (!isMobileMoney) {
           const successText =
             successModal.querySelector("p");
 
-          if (isMobileMoney) {
-            if (successTitle) successTitle.textContent = "Order received — complete payment";
-            if (successText) successText.textContent =
-              "Pay using Mobile Money, then enter the transaction ID or payment confirmation message below. Your order will remain awaiting verification until Fassoko confirms the payment.";
-
-            const paymentStep = document.getElementById("mobileMoneyPaymentStep");
-            const amountEl = document.getElementById("postOrderAmount");
-            const mtnCodeEl = document.getElementById("postOrderMtnCode");
-            if (amountEl) amountEl.textContent = `Amount: ${Number(total || 0).toLocaleString()} RWF`;
-            if (mtnCodeEl) mtnCodeEl.textContent = `*182*8*1*555335*${Number(total || 0)}#`;
-            if (paymentStep) paymentStep.hidden = false;
-
-            window.pendingMobileMoneyOrder = {
-              orderId: createdOrder.id, orderNumber, customerName, customerPhone,
-              customerEmail,
-              deliveryAddress: [district, area, address].filter(Boolean).join(", "),
-              total, subtotal: sub, delivery, paymentMethod: paymentEl.value, orderItems
-            };
-            localStorage.setItem("fassokoPendingMobileMoneyOrder", JSON.stringify(window.pendingMobileMoneyOrder));
-          } else {
-            if (successTitle) successTitle.textContent = "Order placed!";
-            if (successText) successText.textContent = "Thank you for shopping with Fassoko. Your order has been received.";
-          }
+          // Every order — whatever payment method was chosen — gets the
+          // same "Order placed!" confirmation. Mobile Money verification
+          // is handled separately by Fassoko later, not on this screen.
+          if (successTitle) successTitle.textContent = "Order placed!";
+          if (successText) successText.textContent = "Thank you for shopping with Fassoko. Your order has been received.";
 
           successModal.classList.add("open");
 
