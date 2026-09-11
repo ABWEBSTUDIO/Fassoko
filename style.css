@@ -205,7 +205,7 @@ body.loading{
     content: "";
     position: absolute;
     inset: 0;
-    background: url("images/abba hero banner.png") center / contain no-repeat;
+    background: url("abba hero banner.png") center / contain no-repeat;
     filter: blur(1px);
     transform: scale(1.05);
     z-index: -1;
