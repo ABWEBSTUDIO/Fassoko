@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shop All Products — Fassoko</title>
+<title>Your Cart | Fassoko</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" type="image/png" href="images/favicon aba.png" style="border-radius: 5px;">
@@ -16,7 +16,7 @@
 
 <div class="top">
   <div class="top-track">
-     <span><i class="heart-icon fa-regular fa-car"></i> Fast delivery in Kigali</span><span>•</span>
+   <span><i class="heart-icon fa-regular fa-car"></i> Fast delivery in Kigali</span><span>•</span>
     <span><i class="heart-icon fa-regular fa-cart"></i> Picked fresh this morning</span><span>•</span>
     <span><i class="heart-icon fa-regular fa-lock"></i> Secure shopping</span><span>•</span>
     <span><i class="heart-icon fa-regular fa-car"></i> Fast delivery in Kigali</span><span>•</span>
@@ -28,7 +28,7 @@
 <div class="nav wrap">
 <button id="menuToggle" class="menu-toggle" aria-label="Open categories menu">☰</button>
 <a class="brand" href="index.html">
- <img src="images/favicon.png" alt="" style="height: 90px; width: 90px;">
+ <img src="images/favicon.png" alt="" style="height: 60px; width: 90px;">
 </a>
 <div class="search">
   <input id="search" placeholder="Search products, categories..." type="search">
@@ -39,128 +39,63 @@
     <i class="heart-icon fa-regular fa-heart"></i>
     <b id="wishlistCount" class="wishlist-count">0</b>
   </a>
-  <button id="cart" class="hide-on-mobile" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><b id="cartCount" class="cart-count">0</b></button>
-    <a href="login.html" class="account" id="headerAccount">
+<a href="login.html" class="account" id="headerAccount">
     <i class="fa-regular fa-user"></i>
     <span id="headerAccountName">Account</span>
 </a>
-<a
-  href="admin.html"
-  id="adminDashboardLink"
-  class="admin-dashboard-link"
-  hidden
->
-  <i class="fa-solid fa-gauge-high"></i>
-  <span>Admin Dashboard</span>
-</a>
+  <button id="cart" class="hide-on-mobile" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><b id="cartCount" class="cart-count">0</b></button>
 </div>
 </div>
 <div class="categories">
   <div class="wrap cats" id="categoriesMenu">
-    <a class="all" href="shop.html">SHOP →</a>
-  </div>
-</div>
+    <!-- Categories from Supabase will appear here -->
 
-</div>
+  </div>
 </div>
 </header>
 
 <main class="shop-page">
 
-<!-- SHOP HERO BANNER — real photo, not css background -->
 <section class="shop-hero">
-  <img src="images/abba hero banner.png" alt="Fresh fruits and vegetables">
+  <img src="images/fruits&vegetables.png" alt="Your cart">
   <div class="shop-hero-fade"></div>
   <div class="wrap shop-hero-copy">
-    <p class="crumb"><a href="index.html">Home</a> <span>/</span> <span>Shop</span></p>
-    <h1>Shop all products</h1>
-    <p>Fresh produce, pantry staples and everyday essentials — browse by category or search for exactly what you need.</p>
+    <p class="crumb"><a href="index.html">Home</a> <span>/</span> <span>Cart</span></p>
+    <h1>Your cart</h1>
+    <p>Review the products you've added, adjust quantities, and check out whenever you're ready.</p>
   </div>
 </section>
 
 <section class="shop-body">
-  <div class="wrap shop-layout">
-
-    <!-- SIDE CATEGORIES -->
-    <aside class="shop-sidebar" id="shopSidebar">
-      <div class="sidebar-head">
-        <h3>Filters</h3>
-        <button class="sidebar-reset" id="clearFilter" type="button" hidden>Clear all</button>
+  <div class="wrap">
+    <div class="shop-toolbar">
+      <div class="shop-toolbar-left">
+        <p><b id="cartPageCount">0</b> items in your cart</p>
       </div>
-
-      <div class="filter-block">
-        <h4>Price range (RWF)</h4>
-        <div class="price-range-inputs">
-          <input type="number" id="minPrice" placeholder="Min" min="0" inputmode="numeric">
-          <span>–</span>
-          <input type="number" id="maxPrice" placeholder="Max" min="0" inputmode="numeric">
-        </div>
-      </div>
-
-      <div class="filter-block">
-        <label class="filter-checkbox">
-          <input type="checkbox" id="inStockOnly">
-          <span>In stock only</span>
-        </label>
-      </div>
-
-      <div class="filter-block">
-        <h4>Brand</h4>
-        <div class="brand-list" id="brandList"></div>
-      </div>
-
-      <div class="sidebar-divider"></div>
-
-      <div class="sidebar-head sidebar-head-sub">
-        <h4>Categories</h4>
-      </div>
-
-<nav
-  class="cat-list"
-  id="shopCategoryList"
->
-  <div class="shop-category-loading">
-    Loading categories...
-  </div>
-</nav>
-
-      <div class="sidebar-promo">
-        <img src="images/vegetables.png" alt="Fresh vegetables">
-        <p>Fresh off the farm, every morning.</p>
-        <a href="#products">Shop fresh →</a>
-      </div>
-    </aside>
-
-    <!-- PRODUCT GRID -->
-    <div class="shop-main">
-      <div class="shop-toolbar">
-        <div class="shop-toolbar-left">
-          <p><b id="resultCount">0</b> products <span id="activeFilterLabel"></span></p>
-        </div>
-        <div class="sort">
-          <label for="sort">Sort by</label>
-          <select id="sort">
-            <option value="popular">Most popular</option>
-            <option value="newest">Newest</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="name">Name A–Z</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="products" class="product-grid shop-grid"></div>
-      <p class="empty-state" id="emptyState" hidden>No products in this category yet — check back soon, or browse another category.</p>
+      <button class="sidebar-reset" id="clearCart" type="button" hidden>Clear cart</button>
     </div>
 
-  </div>
-</section>
+    <div class="cart-page-layout">
+      <div id="cartPageItems" class="cart-page-list"></div>
 
-<section class="recently-viewed-section wrap reveal" id="recentlyViewedSection" hidden>
-  <div class="rv-head">
-    <h2>Recently viewed</h2>
+      <aside class="cart-page-summary" id="cartPageSummary">
+        <h2>Order summary</h2>
+        <div class="cart-page-summary-line">
+          <span>Subtotal</span>
+          <strong id="cartPageSubtotal">0 RWF</strong>
+        </div>
+        <p class="cart-page-summary-note">Delivery fees are calculated at checkout based on your area.</p>
+        <a href="checkout.html" class="cta cart-page-checkout-btn">Proceed to checkout →</a>
+        <a href="shop.html" class="cart-page-continue">← Continue shopping</a>
+      </aside>
+    </div>
+
+    <div class="empty-state cart-page-empty" id="cartPageEmpty" hidden>
+      <span class="cart-page-empty-icon">🛒</span>
+      <p>Your cart is empty.</p>
+      <a class="cta" href="shop.html">Start shopping</a>
+    </div>
   </div>
-  <div id="recentlyViewed" class="product-grid shop-grid"></div>
 </section>
 
 </main>

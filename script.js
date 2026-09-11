@@ -179,6 +179,7 @@ function update(){
   const n=cart.reduce((s,x)=>s+x.qty,0);
   document.querySelectorAll(".cart-count").forEach(el=>el.textContent=n);
   renderCartDrawer();
+  if(typeof isCartPage!=="undefined" && isCartPage) renderCartPage();
 }
 
 /* ---------- wishlist ---------- */
@@ -354,6 +355,7 @@ function buildCartDrawer(){
       <div id="cartItems" class="cart-items"></div>
       <div class="cart-drawer-foot">
         <div class="cart-subtotal"><span>Subtotal</span><b id="cartSubtotal">0 RWF</b></div>
+        <a href="cart.html" class="cta-ghost cart-view-full-btn">View full cart →</a>
         <a href="checkout.html" class="cta cart-checkout-btn">Proceed to checkout →</a>
       </div>
     </aside>`;
@@ -601,6 +603,99 @@ function renderCartDrawer() {
   }
 
 }
+
+/* ============================================================
+   CART PAGE (cart.html) — full list of everything in the cart
+   ============================================================ */
+function renderCartPage(){
+  const itemsEl=document.getElementById("cartPageItems");
+  if(!itemsEl) return;
+
+  const summaryEl=document.getElementById("cartPageSummary");
+  const emptyEl=document.getElementById("cartPageEmpty");
+  const countEl=document.getElementById("cartPageCount");
+  const clearBtn=document.getElementById("clearCart");
+
+  const itemCount=cart.reduce((s,x)=>s+x.qty,0);
+  if(countEl) countEl.textContent=itemCount;
+  if(clearBtn) clearBtn.hidden=cart.length===0;
+
+  if(cart.length===0){
+    itemsEl.innerHTML="";
+    itemsEl.hidden=true;
+    if(summaryEl) summaryEl.hidden=true;
+    if(emptyEl) emptyEl.hidden=false;
+    return;
+  }
+
+  itemsEl.hidden=false;
+  if(summaryEl) summaryEl.hidden=false;
+  if(emptyEl) emptyEl.hidden=true;
+
+  itemsEl.innerHTML=cart.map(x=>{
+    const p=products.find(pr=>Number(pr.id)===Number(x.id));
+    if(!p) return "";
+
+    const price=Number(x.option_price ?? p.price);
+    const lineTotal=price*Number(x.qty);
+
+    const visual=p.image
+      ? `<img src="${p.image}" alt="${p.name}">`
+      : `<div class="cart-item-emoji" style="background:${p.bg||'#edf6ef'}">${p.emoji||"🛒"}</div>`;
+
+    return `<div class="cart-page-item">
+      <div class="cart-page-item-pic">${visual}</div>
+      <div class="cart-page-item-body">
+        <a href="product.html?id=${p.id}"><b>${p.name}</b></a>
+        ${x.option_name?`<small class="cart-option-name">${x.option_name}</small>`:""}
+        <small class="cart-page-item-unit">${money(price)} each</small>
+      </div>
+      <div class="qty-stepper">
+        <button class="qty-minus" data-id="${p.id}" aria-label="Decrease quantity">−</button>
+        <span>${x.qty}</span>
+        <button class="qty-plus" data-id="${p.id}" aria-label="Increase quantity">+</button>
+      </div>
+      <div class="cart-page-item-total">${money(lineTotal)}</div>
+      <button class="item-remove" data-id="${p.id}" aria-label="Remove item">✕</button>
+    </div>`;
+  }).join("");
+
+  const subtotal=cart.reduce((s,x)=>{
+    const p=products.find(pr=>Number(pr.id)===Number(x.id));
+    if(!p) return s;
+    return s+(Number(x.option_price ?? p.price)*Number(x.qty));
+  },0);
+  const subtotalEl=document.getElementById("cartPageSubtotal");
+  if(subtotalEl) subtotalEl.textContent=money(subtotal);
+}
+
+if(document.getElementById("cartPageItems")){
+  document.getElementById("cartPageItems").addEventListener("click",e=>{
+    const btn=e.target.closest("button");
+    if(!btn) return;
+    const id=Number(btn.dataset.id);
+    const item=cart.find(x=>x.id===id);
+    if(!item) return;
+    if(btn.classList.contains("qty-plus")) setQty(id,item.qty+1);
+    else if(btn.classList.contains("qty-minus")) setQty(id,item.qty-1);
+    else if(btn.classList.contains("item-remove")) setQty(id,0);
+  });
+}
+
+const clearCartBtn=document.getElementById("clearCart");
+if(clearCartBtn){
+  clearCartBtn.addEventListener("click",()=>{
+    if(cart.length===0) return;
+    if(!confirm("Remove all products from your cart?")) return;
+    cart=[];
+    save();
+    update();
+    toast("Cart cleared");
+  });
+}
+
+renderCartPage();
+
 /* ---------- side wishlist drawer ---------- */
 function buildWishlistDrawer(){
   if(document.getElementById("wishlistDrawer")) return;
@@ -794,6 +889,7 @@ const hasOptions =
 const homeGrid=document.getElementById("products");
 const isShopPage=!!document.getElementById("shopSidebar");
 const isWishlistPage=!!document.getElementById("wishlistGrid");
+const isCartPage=!!document.getElementById("cartPageItems");
 
 /* ---------- homepage category showcase ---------- */
 function fillCategoryBlock(elId,group,count){
