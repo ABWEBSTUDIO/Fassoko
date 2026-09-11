@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Order Details | Fassoko</title>
+
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- HEADER -->
+
+  <header class="account-site-header">
+
+    <div class="account-header-inner">
+
+
+      <a
+        href="index.html"
+        class="account-logo"
+      >
+        <span class="account-logo-main">
+          Fasso
+        </span>
+
+        <span class="account-logo-sub">
+          ko
+        </span>
+      </a>
+
+
+      <nav class="account-header-nav">
+
+        <a href="index.html">
+
+          <i class="fa-solid fa-house"></i>
+
+          <span>Home</span>
+
+        </a>
+
+
+        <a href="shop.html">
+
+          <i class="fa-solid fa-store"></i>
+
+          <span>Shop</span>
+
+        </a>
+
+
+        <a href="wishlist.html">
+
+          <i class="fa-solid fa-heart"></i>
+
+          <span>Wishlist</span>
+
+        </a>
+
+
+        <a
+          href="account.html"
+          class="active"
+        >
+
+          <i class="fa-solid fa-user"></i>
+
+          <span>Account</span>
+
+        </a>
+
+      </nav>
+
+
+      <div class="account-header-actions">
+
+        <a
+          href="cart.html"
+          class="account-header-cart"
+        >
+
+          <i class="fa-solid fa-cart-shopping"></i>
+
+          <span id="cartCount">
+            0
+          </span>
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- PAGE -->
+
+  <main class="account-page">
+
+    <div class="wrap">
+
+
+      <!-- Back -->
+
+      <a
+        href="account.html#myOrders"
+        class="back-to-orders"
+      >
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back to My Orders
+
+      </a>
+
+
+
+      <!-- Loading orders only -->
+
+      <div
+        id="orderDetailsLoading"
+        class="order-details-loading"
+      >
+
+        <i class="fa-solid fa-spinner fa-spin"></i>
+
+      </div>
+
+
+
+      <!-- Error -->
+
+      <div
+        id="orderDetailsError"
+        class="order-details-error"
+        hidden
+      >
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        <h2>
+          Order not found
+        </h2>
+
+        <p>
+          This order does not exist or does not belong to your account.
+        </p>
+
+
+        <a
+          href="account.html"
+          class="account-primary-btn"
+        >
+          Back to My Account
+        </a>
+
+      </div>
+
+
+
+      <!-- CONTENT -->
+
+      <div
+        id="orderDetailsContent"
+        hidden
+      >
+
+
+        <!-- TOP -->
+
+        <section class="order-details-hero">
+
+          <div>
+
+            <p class="account-card-label">
+              ORDER DETAILS
+            </p>
+
+
+            <h1 id="detailOrderNumber">
+              Order
+            </h1>
+
+
+            <p id="detailOrderDate">
+            </p>
+
+          </div>
+
+
+          <div
+            id="detailOrderStatus"
+            class="detail-status"
+          >
+            Pending
+          </div>
+<div
+  id="detailCancelArea"
+  hidden
+>
+
+  <button
+    id="detailCancelOrder"
+    type="button"
+    class="detail-cancel-btn"
+  >
+
+    <i class="fa-solid fa-xmark"></i>
+
+    Cancel this order
+
+  </button>
+
+</div>
+        </section>
+
+
+
+        <div class="order-details-grid">
+
+
+          <!-- PRODUCTS -->
+
+          <section class="account-card">
+
+            <div class="account-card-head">
+
+              <div>
+
+                <p class="account-card-label">
+                  PRODUCTS
+                </p>
+
+                <h2>
+                  Items in your order
+                </h2>
+
+              </div>
+
+            </div>
+
+
+            <div
+              id="orderProductsList"
+              class="order-products-list"
+            ></div>
+
+          </section>
+
+
+
+          <!-- SUMMARY -->
+
+          <section class="account-card order-summary-card">
+
+            <p class="account-card-label">
+              PAYMENT
+            </p>
+
+            <h2>
+              Order Summary
+            </h2>
+
+
+            <div class="detail-summary-row">
+
+              <span>
+                Payment status
+              </span>
+
+              <strong id="detailPaymentStatus">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="detail-summary-row">
+
+              <span>
+                Delivery address
+              </span>
+
+              <strong id="detailAddress">
+                -
+              </strong>
+
+            </div>
+
+
+            <div class="detail-summary-row detail-total-row">
+
+              <span>
+                Total
+              </span>
+
+              <strong id="detailTotal">
+                RWF 0
+              </strong>
+
+            </div>
+
+          </section>
+
+
+        </div>
+
+
+
+        <!-- NOTES -->
+
+        <section
+          id="detailNotesCard"
+          class="account-card detail-notes-card"
+          hidden
+        >
+
+          <p class="account-card-label">
+            ORDER NOTES
+          </p>
+
+
+          <p id="detailNotes">
+          </p>
+
+        </section>
+
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="supabase-config.js"></script>
+
+  <script src="order-details.js"></script>
+
+
+</body>
+
+</html>

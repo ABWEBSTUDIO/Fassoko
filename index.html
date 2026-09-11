@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fassoko — Shop Smarter. Live Easier.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/png" href="images/favicon aba.png" style="border-radius: 5px;">
+<link rel="shortcut icon" href="images/favicon.png" style="border-radius: 5px; height: 60px;" >
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="flash-deals.css">
+<link rel="stylesheet" href="home-testimonials.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="top-track">
+    <span><i class="fa-solid fa-car"></i> Fast delivery in Kigali</span><span>•</span>
+    <span><i class="fa-solid fa-lock"></i> Secure shopping</span><span>•</span>
+    <span><i class="fa-solid fa-car"></i>Fast delivery in Kigali</span><span>•</span>
+    <span><i class="fa-solid fa-lock"></i> Secure shopping</span><span>•</span>
+  </div>
+</div>
+<header>
+<div class="nav wrap">
+<button id="menuToggle" class="menu-toggle" aria-label="Open categories menu">☰</button>
+<a class="brand" href="index.html">
+ <img src="images/favicon.png" alt="" style="height: 60px; width: 60px;">
+</a>
+<div class="search">
+  <input
+    id="search"
+    placeholder="Search products, categories..."
+    type="search"
+  >
+
+  <button id="searchBtn" aria-label="Search">
+    <i class="fa-solid fa-search"></i>
+  </button>
+</div>
+<div class="actions">
+  <a href="wishlist.html" class="wishlist-link hide-on-mobile" aria-label="Wishlist">
+    <i class="heart-icon fa-regular fa-heart"></i>
+    <b id="wishlistCount" class="wishlist-count">0</b>
+  </a>
+  <button id="cart" class="hide-on-mobile" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><b id="cartCount" class="cart-count">0</b></button>
+  <a href="login.html" class="account" id="headerAccount">
+    <i class="fa-regular fa-user"></i>
+    <span id="headerAccountName">Account</span>
+</a>
+<a
+  href="admin.html"
+  id="adminDashboardLink"
+  class="admin-dashboard-link"
+  hidden
+>
+  <i class="fa-solid fa-gauge-high"></i>
+  <span>Admin Dashboard</span>
+</a>
+<button
+  type="button"
+  id="customerNotificationButton"
+  class="customer-notification-button"
+  aria-label="Notifications"
+>
+  <i class="fa-regular fa-bell"></i>
+
+  <span
+    id="customerNotificationBadge"
+    hidden
+  >
+    0
+  </span>
+</button>
+</div>
+</div>
+<div class="categories">
+  <div class="wrap cats" id="categoriesMenu">
+    <!-- Categories from Supabase will appear here -->
+
+  </div>
+</div>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow-pill">🌿 Farm crates arrive daily</span>
+      <h1>Market-fresh <em>essentials</em>,<br>at your door by evening.</h1>
+      <p>Hand-picked produce and everyday goods, packed this morning in Kigali and delivered while it's still crisp.</p>
+      <div class="hero-stats">
+        <div><b>45min</b><span>avg. delivery</span></div>
+        <div><b>1,200+</b><span>daily orders</span></div>
+        <div><b>4.8★</b><span>customer rating</span></div>
+      </div>
+      <div class="hero-btns">
+        <a class="cta" href="shop.html">Start shopping →</a>
+        <a class="cta-ghost" href="flash-deals.html">See today's deals</a>
+      </div>
+      
+    </div>
+    <div class="hero-collage" aria-hidden="false">
+      <div class="blob"></div>
+      <div class="stamp">
+        <span>Picked<br>Today</span>
+      </div>
+      <figure class="collage-card c1">
+        <img src="images/watermelon.webp" alt="Fresh whole cauliflower">
+        <figcaption>Watermelon<small>3000 RWF</small>
+        </figcaption>
+      </figure>
+      <figure class="collage-card c2">
+        <img src="images/aubergine.jpg" alt="Fresh aubergines, sliced and whole">
+        <figcaption>Aubergine<small>1,100 RWF/kg</small>
+        </figcaption>
+      </figure>
+      <figure class="collage-card c3">
+        <img src="images/banana.jpg" alt="Ripe yellow banana">
+        <figcaption>Banana<small>800 RWF/kg</small>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="services reveal"><div class="wrap service-grid">
+<div><i class="fa-solid fa-car"></i><span>
+  <b>Fast delivery</b>
+  <small>Convenient local delivery</small>
+</span>
+</div>
+<div><i class="fa-solid fa-gift"></i><span>
+  <b>Great value</b>
+  <small>Deals every day</small>
+</span>
+</div>
+<div><i class="fa-solid fa-house"></i><span>
+  <b>Wide selection</b>
+  <small>Everything in one place</small>
+</span>
+</div>
+<div><i class="fa-solid fa-car"></i><span>
+  <b>Quality products</b>
+  <small>Shop with confidence</small>
+</span>
+</div>
+</div>
+</section>
+
+
+<!-- SHOP BY CATEGORY -->
+<section class="section reveal">
+  <div class="wrap">
+    <div class="heading">
+    <div>
+      <small>DISCOVER MORE</small>
+      <h2>Shop by categories</h2>
+    </div>
+    <a href="shop.html">Explore all →</a>
+  </div>
+  <div class="category-grid">
+    <a href="shop.html?cat=Groceries" class="cat-photo">
+      <i><img src="images/groceries.jfif" alt="Groceries"></i>
+      <b>Groceries</b>
+    </a>
+     <a href="shop.html?cat=Beverages" class="cat-photo">
+      <i><img src="images/beverages.jpg" alt="Beverages"></i>
+      <b>Beverages</b>
+    </a>
+     <a href="shop.html?cat=Fruits%20%26%20Vegetables" class="cat-photo">
+      <i><img src="images/vegetables.png" alt="Fresh vegetables"></i>
+      <b>Fruits &amp;<br>Vegetables</b>
+    </a>
+     <a href="shop.html?cat=Breakfast%20%26%20Dairy" class="cat-photo">
+      <i><img src="images/breakfast.png" alt="Breakfast"></i>
+      <b>Breakfast</b>
+    </a>
+    <a href="shop.html?cat=Meat%20%26%20Poultry" class="cat-photo">
+      <i><img src="images/meat and poultry.webp" alt="Meat&poultry"></i>
+      <b>Meat &amp;<br>Poultry</b>
+    </a>
+    <a href="shop.html?cat=Snacks" class="cat-photo">
+      <i><img src="images/chocolates.png" alt="Fresh vegetables"></i>
+      <b>Chocolates,Snacks &amp;<br>Biscuits</b>
+    </a>
+    <a href="shop.html?cat=Household" class="cat-photo">
+      <i><img src="images/household.png" alt="Fresh vegetables"></i>
+      <b>Household <br>Essentials</b>
+    </a>
+      <a href="shop.html?cat=Personal%20Care" class="cat-photo">
+      <i><img src="images/personal care.jpeg" alt="Fresh vegetables"></i>
+      <b>Personal <br>Care</b>
+    </a>
+      <a href="shop.html?cat=Baby%20Products" class="cat-photo">
+      <i><img src="images/BABY PRODUCTS PNG.png" alt="Baby Products"></i>
+      <b>Baby <br>Products</b>
+    </a>
+  </div>
+</div>
+</section>
+
+
+<!-- SNACKS -->
+<section class="section reveal">
+     <div class="wrap">
+          <div class="heading">
+          <div>
+               <small>TASTY PICKS</small>
+               <h2>Snacks</h2>
+          </div>
+          <a href="shop.html?cat=Snacks">View all →</a>
+     </div>
+<div class="popular-products-viewport">
+  <div id="snacksProducts" class="product-grid popular-products-track"></div>
+</div>
+</div>
+</section>
+
+<section class="section pale reveal baby-feature">
+  <div class="wrap baby-feature-inner">
+
+    <div class="baby-feature-copy">
+      <small>GENTLE CARE</small>
+      <h2>Gentle care for<br>your little one.</h2>
+      <p>Shop safe, soothing baby care products picked for comfort and quality.</p>
+      <a class="cta" href="shop.html?cat=Baby%20Products">Shop now →</a>
+    </div>
+
+    <div class="baby-feature-card">
+      <div class="baby-feature-slider">
+        <div id="babyFeatureGrid" class="product-grid baby-feature-grid"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- POPULAR PRODUCTS -->
+<section class="section reveal">
+     <div class="wrap">
+          <div class="heading">
+          <div>
+               <small>FRESH EVERY DAY</small>
+               <h2>Popular products</h2>
+          </div>
+          <a href="shop.html">View all →</a>
+     </div>
+<div class="popular-products-viewport">
+  <div id="products" class="product-grid popular-products-track"></div>
+</div>
+</div>
+</section>
+
+<!-- SHOP FOR YOUR BUSINESS — B2B call-to-action banner -->
+<section class="biz reveal">
+  <div class="wrap biz-inner">
+    <small>FOR OFFICES, RESTAURANTS &amp; SHOPS</small>
+    <h2>Shop for your business.</h2>
+    <p>For a quote, call, text or send a WhatsApp message at<br><b>+250 788 877 475</b> &nbsp;|&nbsp; E-mail: <b>order@fassoko.com</b></p>
+    <div class="biz-btns">
+      <a class="biz-call" href="tel:+250788877475">CALL 📞</a>
+      <a class="biz-whatsapp" href="https://wa.me/250788877475" target="_blank" rel="noopener">SEND WHATSAPP 💬</a>
+    </div>
+  </div>
+</section>
+<section class="new-arrivals-section">
+
+    <div class="new-arrivals-header">
+
+        <div class="new-arrivals-heading">
+
+            <span class="section-label">
+                JUST DROPPED
+            </span>
+
+            <h2>
+                New <em>Arrivals</em>
+            </h2>
+
+            <p>
+                Discover the latest products added to Fassoko.
+            </p>
+
+        </div>
+
+
+        <div class="new-arrivals-controls">
+
+            <button class="new-arrivals-prev" aria-label="Previous products">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <button class="new-arrivals-next" aria-label="Next products">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <a href="shop.html" class="new-arrivals-view-all">
+                View All
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="new-arrivals-slider-wrapper">
+
+        <button class="new-arrivals-side-prev" aria-label="Previous">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+
+        <div class="new-arrivals-track" id="newArrivalsTrack">
+        </div>
+
+
+        <button class="new-arrivals-side-next" aria-label="Next">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+    </div>
+
+
+    <div
+        id="newArrivalsLoading"
+        class="new-arrivals-loading"
+    >
+        Loading new arrivals...
+    </div>
+
+
+    <div
+        id="newArrivalsEmpty"
+        class="new-arrivals-empty"
+        style="display:none;"
+    >
+        No new arrivals available yet.
+    </div>
+
+
+    <div
+        id="newArrivalsProgress"
+        class="new-arrivals-progress"
+    ></div>
+
+</section>
+
+
+
+<!-- FLASH DEALS -->
+<section class="home-flash-deals reveal" id="homeFlashDealsSection" hidden>
+  <div class="wrap">
+    <div class="heading">
+      <div>
+        <small><i class="fa-solid fa-bolt"></i> LIMITED TIME</small>
+        <h2>Flash Deals</h2>
+      </div>
+      <div class="home-flash-deals-mini-cd" aria-label="Time left on next flash deal">
+        <i class="fa-solid fa-clock"></i>
+        <span id="homeCdNumbers">Next ends in <b id="homeCdHours">00</b>:<b id="homeCdMinutes">00</b>:<b id="homeCdSeconds">00</b></span>
+        <span id="homeCdNoExpiry" hidden>No expiry yet</span>
+      </div>
+      <a href="flash-deals.html">See all deals →</a>
+    </div>
+
+    <div id="homeFlashDealsLoading" class="home-flash-deals-loading">
+      <i class="fa-solid fa-spinner fa-spin"></i> Loading today's deals...
+    </div>
+
+    <div id="homeFlashDealsViewport" class="home-flash-deals-viewport" hidden>
+      <div id="homeFlashDealsTrack" class="home-flash-deals-track"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="wrap">
+    <div class="center">
+      <small>WHY SHOP WITH US?</small>
+      <h2>Built around your everyday life.</h2>
+    </div>
+<div class="why">
+  <article>⚡
+    <h3>Convenient</h3>
+    <p>Find everyday essentials online without the trip to the store.</p>
+  </article>
+  <article>💚
+    <h3>Quality first</h3>
+    <p>A growing selection for your home and family.</p>
+  </article>
+  <article>💰
+    <h3>Better value</h3>
+    <p>Discover promotions and useful deals throughout the store.</p>
+  </article>
+  <article>📦
+    <h3>Easy ordering</h3>
+    <p>Add products to your cart and checkout in a few simple steps.</p>
+  </article>
+</div>
+</div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section pale reveal">
+  <div class="wrap">
+    <div class="center testimonials-center">
+      <small>TRUSTED BY SHOPPERS</small>
+      <h2>What our customers say</h2>
+      <div class="testimonials-cta-row">
+        <a class="cta-ghost testimonials-cta" href="testimony.html">Share your experience →</a>
+        <a class="cta-ghost testimonials-cta" href="testimonials.html">See all reviews →</a>
+      </div>
+    </div>
+
+    <div id="homeTestimonialsLoading" class="testimonials-loading">
+      <i class="fa-solid fa-spinner fa-spin"></i> Loading reviews...
+    </div>
+
+    <div id="homeTestimonialsGrid" class="testimonial-grid" hidden></div>
+
+    <div id="homeTestimonialsEmpty" class="testimonials-empty" hidden>
+      <p>No reviews yet — be the first to share your experience.</p>
+      <a class="cta" href="testimony.html">Share your experience →</a>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter reveal">
+  <div class="wrap newsletter-inner">
+    <div>
+      <small>FASSOKO UPDATES</small>
+      <h2>Deals delivered to your inbox.</h2>
+      <p>Get new products, promotions and special offers.</p>
+    </div>
+    <form id="newsletter">
+      <input required type="email" placeholder="Your email address">
+      <button>Subscribe</button>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="#">Fasso<span>ko</span></a>
+      <p>Your everyday online shopping destination.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="shop.html">Shop all</a>
+      <a href="flash-deals.html">Flash deals</a>
+      <a href="testimonials.html">Reviews</a>
+      <a href="#category-grid">Categories</a>
+      <a href="#">Offers</a>
+    </div>
+    <div>
+      <h4>Help</h4>
+      <a href="#">Contact us</a>
+      <a href="#">Delivery information</a>
+      <a href="#">FAQs</a>
+    </div>
+    <div>
+      <h4>Follow us</h4>
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+      <a href="#">WhatsApp</a>
+    </div>
+  </div>
+    <div class="bottom wrap">© 2026 Fassoko. All rights reserved.</div>
+  </footer>
+<div id="toast">Added to cart ✓</div>
+<nav class="mobile-tabbar" aria-label="Primary">
+  <a href="index.html" class="tab-item active" aria-label="Home">
+    <i class="fa-solid fa-house"></i><span>Home</span>
+  </a>
+  <a href="https://wa.me/250799427844" class="tab-item" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i><span>Chat</span>
+  </a>
+  <button type="button" id="cartTab" class="tab-item" aria-label="Cart">
+    <i class="fa-solid fa-cart-shopping"></i><span>Cart</span>
+  </button>
+  <a href="wishlist.html" class="tab-item wishlist-link" aria-label="Wishlist">
+    <i class="fa-regular fa-heart"></i><span>Wishlist</span>
+    <b class="tab-badge wishlist-count">0</b>
+  </a>
+<a
+  href="account.html#myOrders"
+  class="tab-item"
+  aria-label="Orders"
+>
+  <i class="fa-solid fa-box"></i>
+  <span>Orders</span>
+</a>
+</nav>
+<div
+  id="customerNotificationPanel"
+  class="customer-notification-panel"
+  hidden
+>
+
+  <div class="customer-notification-head">
+
+    <strong>Notifications</strong>
+
+    <button
+      type="button"
+      id="closeCustomerNotifications"
+    >
+      ×
+    </button>
+
+  </div>
+
+  <div id="customerNotificationList"></div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
+<script src="deals-common.js"></script>
+<script src="home-flash-deals.js"></script>
+<script src="home-testimonials.js"></script>
+</body>
+</html>

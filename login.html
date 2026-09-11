@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Register | Fassoko</title>
+<link rel="icon" type="image/png" href="images/favicon aba.png" style="border-radius: 5px;">
+<link rel="shortcut icon" href="images/favicon aba.png" style="border-radius: 5px; height: 60px;" >
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<div class="page">
+  <section class="visual">
+    <a class="logo" href="index.html" ><img src="images/logo.png" alt=""></a>
+    <div class="visual-content">
+      <small>WELCOME TO FASSOKO</small>
+      <h1>Shop smarter.<br><em>Live better.</em></h1>
+      <p>Create your account to save your details, track orders and enjoy a faster shopping experience.</p>
+      <div class="benefits">
+        <div>✓ Easy online shopping</div>
+        <div>✓ Track your orders</div>
+        <div>✓ Faster checkout</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="auth">
+    <div class="auth-box">
+      <a class="mobile-logo logo" href="index.html">Fasso<span>ko</span></a>
+
+      <div class="tabs">
+        <button class="tab active" data-mode="login">LOGIN</button>
+        <button class="tab" data-mode="register">CREATE ACCOUNT</button>
+      </div>
+
+      <form id="loginForm" class="form active">
+        <div class="heading">
+          <h2>Welcome back</h2>
+          <p>Log in to your Fassoko account.</p>
+        </div>
+     <label>Email address</label>
+
+<input
+  id="loginContact"
+  required
+  type="email"
+  placeholder="Enter your email"
+>
+        <label>Password</label>
+        <div class="password">
+          <input id="loginPassword" required type="password" placeholder="Enter your password">
+          <button type="button" data-target="loginPassword">Show</button>
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox"> Remember me</label>
+          <a href="#">Forgot password?</a>
+        </div>
+        <button class="submit" type="submit">LOGIN</button>
+        <p class="switch">Don't have an account? <button type="button" data-switch="register">Create one</button></p>
+      </form>
+
+      <form id="registerForm" class="form">
+        <div class="heading">
+          <h2>Create your account</h2>
+          <p>Join Fassoko and make your next order easier.</p>
+        </div>
+        <label>Full name</label>
+        <input id="name" required placeholder="Your full name">
+        <label>Phone number</label>
+        <input id="phone" required type="tel" placeholder="07XXXXXXXX">
+        <label>Email address</label>
+        <input id="email" required type="email" placeholder="you@example.com">
+        <label>Password</label>
+        <div class="password">
+          <input id="password" required type="password" minlength="6" placeholder="At least 6 characters">
+          <button type="button" data-target="password">Show</button>
+        </div>
+        <label>Confirm password</label>
+        <div class="password">
+          <input id="confirm" required type="password" placeholder="Repeat your password">
+          <button type="button" data-target="confirm">Show</button>
+        </div>
+        <label class="check terms"><input id="terms" required type="checkbox"> I agree to the terms and privacy policy.</label>
+        <button class="submit" type="submit">CREATE ACCOUNT</button>
+        <p class="switch">Already have an account? <button type="button" data-switch="login">Log in</button></p>
+      </form>
+    </div>
+  </section>
+</div>
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title id="pdpPageTitle">Product | Fassoko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/png" href="images/favicon aba.png" style="border-radius: 5px;">
+<link rel="shortcut icon" href="images/favicon aba.png" style="border-radius: 5px; height: 20px;">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="top-track">
+    <span><i class="heart-icon fa-regular fa-car"></i> Fast delivery in Kigali</span><span>•</span>
+    <span><i class="heart-icon fa-regular fa-cart"></i> Picked fresh this morning</span><span>•</span>
+    <span><i class="heart-icon fa-regular fa-lock"></i> Secure shopping</span><span>•</span>
+    <span><i class="heart-icon fa-regular fa-car"></i> Fast delivery in Kigali</span><span>•</span>
+    <span><i class="heart-icon fa-regular fa-cart"></i> Picked fresh this morning</span><span>•</span>
+    <span><i class="heart-icon fa-regular fa-lock"></i> Secure shopping</span><span>•</span>
+  </div>
+</div>
+<header>
+<div class="nav wrap">
+<button id="menuToggle" class="menu-toggle" aria-label="Open categories menu">☰</button>
+<a class="brand" href="index.html">
+ <img src="images/favicon.png" alt="" style="height: 60px; width: 90px;">
+</a>
+<div class="search">
+  <input id="search" placeholder="Search products, categories..." type="search">
+  <button id="searchBtn" aria-label="Search"><i class="fa-solid fa-search"></i></button>
+</div>
+<div class="actions">
+  <a href="wishlist.html" class="wishlist-link hide-on-mobile" aria-label="Wishlist">
+    <i class="heart-icon fa-regular fa-heart"></i>
+    <b id="wishlistCount" class="wishlist-count">0</b>
+  </a>
+  <button id="cart" class="hide-on-mobile" aria-label="Cart"><i class="fa-solid fa-cart-shopping"></i><b id="cartCount" class="cart-count">0</b></button>
+    <a href="login.html" class="account" id="headerAccount">
+    <i class="fa-regular fa-user"></i>
+    <span id="headerAccountName">Account</span>
+</a>
+<a
+  href="admin.html"
+  id="adminDashboardLink"
+  class="admin-dashboard-link"
+  hidden
+>
+  <i class="fa-solid fa-gauge-high"></i>
+  <span>Admin Dashboard</span>
+</a>
+</div>
+</div>
+<div class="categories">
+  <div class="wrap cats" id="categoriesMenu">
+    <a class="all" href="shop.html">SHOP →</a>
+  </div>
+</div>
+
+</div>
+</div>
+</header>
+
+<main class="shop-page">
+
+<section class="pdp-crumb-wrap">
+  <div class="wrap">
+    <p class="crumb" id="pdpCrumb"><a href="index.html">Home</a> <span>/</span> <a href="shop.html">Shop</a> <span>/</span> <span id="crumbCat">Product</span></p>
+  </div>
+</section>
+
+<section class="pdp">
+  <div class="wrap pdp-layout" id="pdpContent">
+    <!-- populated by script.js: renderProductPage() -->
+  </div>
+</section>
+
+<section class="section pale" id="relatedSection">
+  <div class="wrap">
+    <div class="heading">
+      <div><small>YOU MAY ALSO LIKE</small><h2>Related products</h2></div>
+      <a href="shop.html">Shop all →</a>
+    </div>
+    <div id="relatedGrid" class="product-grid"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="index.html">Fasso<span>ko</span></a>
+      <p>Your everyday online shopping destination.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="shop.html">Shop all</a>
+      <a href="#">Categories</a>
+      <a href="#">Offers</a>
+    </div>
+    <div>
+      <h4>Help</h4>
+      <a href="#">Contact us</a>
+      <a href="#">Delivery information</a>
+      <a href="#">FAQs</a>
+    </div>
+    <div>
+      <h4>Follow us</h4>
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+      <a href="https://wa.me/250799427844">WhatsApp</a>
+    </div>
+  </div>
+  <div class="bottom wrap">© 2026 Fassoko. All rights reserved.</div>
+</footer>
+<div id="toast">Added to cart ✓</div>
+<nav class="mobile-tabbar" aria-label="Primary">
+  <a href="index.html" class="tab-item" aria-label="Home">
+    <i class="fa-solid fa-house"></i><span>Home</span>
+  </a>
+  <a href="https://wa.me/250788877475" class="tab-item" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i><span>Chat</span>
+  </a>
+  <button type="button" id="cartTab" class="tab-item" aria-label="Cart">
+    <i class="fa-solid fa-cart-shopping"></i><span>Cart</span>
+    <b class="tab-badge cart-count">0</b>
+  </button>
+  <a href="wishlist.html" class="tab-item wishlist-link" aria-label="Wishlist">
+    <i class="fa-regular fa-heart"></i><span>Wishlist</span>
+    <b class="tab-badge wishlist-count">0</b>
+  </a>
+  <a href="account.html#myOrders" class="tab-item" aria-label="Orders">
+    <i class="fa-solid fa-box"></i><span>Orders</span>
+  </a>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
