@@ -6663,10 +6663,19 @@ body {
    RESPONSIVE
 ===================================================== */
 
-@media (max-width: 950px) {
+@media (max-width: 1300px) {
 
     .new-arrival-card {
         flex-basis: calc((100% - 60px) / 4);
+    }
+
+}
+
+
+@media (max-width: 950px) {
+
+    .new-arrival-card {
+        flex-basis: calc((100% - 40px) / 3);
     }
 
 
@@ -6698,7 +6707,7 @@ body {
 
 
     .new-arrival-card {
-        flex-basis: calc((100% - 20px) / 2);
+        flex-basis: calc((100% - 0px) / 2);
     }
 
 
@@ -6743,7 +6752,7 @@ body {
 
 
     .new-arrival-card {
-        flex: 0 0 calc((100% - 20px) / 2);
+        flex: 0 0 82%;
 
         min-width: 0;
     }
