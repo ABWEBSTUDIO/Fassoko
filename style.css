@@ -385,20 +385,33 @@ body.loading{
 .card{
   background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden;
   transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+  display:flex;flex-direction:column;height:100%;box-sizing:border-box;
 }
 .card:hover{transform:translateY(-6px);box-shadow:0 20px 34px #17232b16}
-.pic{height:170px;display:grid;place-items:center;position:relative;overflow:hidden;background:#fff;box-sizing:border-box;padding:16px}
+.pic{height:170px;display:grid;place-items:center;position:relative;overflow:hidden;background:#fff;box-sizing:border-box;padding:16px;flex-shrink:0}
 .pic img{width:100%;height:100%;object-fit:contain}
 .pic button{position:absolute;right:10px;top:10px;border:0;background:white;border-radius:50%;width:30px;height:30px;cursor:pointer;box-shadow:0 4px 10px #17232b22}
-.info{padding:13px}
-.info small,.sale-grid small{font-size:9px;color:var(--ink-soft)}
-.info h3,.sale-grid h3{font-size:11px;margin:4px 0 8px}
+/* Cards flex-grow to fill their row/track, and everything below the
+   image is a column so the Add button always lands on the same
+   baseline no matter how long the title, category or price text is. */
+.info{padding:13px;display:flex;flex-direction:column;flex:1;min-height:0;box-sizing:border-box;gap:6px}
+.info small,.sale-grid small{
+  font-size:9px;color:var(--ink-soft);
+  display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.info h3,.sale-grid h3{
+  font-size:11px;margin:4px 0 0;line-height:1.35;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;
+  overflow:hidden;min-height:2.7em;
+}
 .info strong,.sale-grid>b{font-size:10px;color:var(--forest)}
 .add{
-  display:block;width:100%;margin-top:11px;height:36px;border:1px solid #cce3d2;
+  display:block;width:100%;margin-top:auto;height:36px;border:1px solid #cce3d2;
   background:#eff8f1;color:var(--forest);border-radius:8px;font-size:9px;font-weight:800;
   cursor:pointer;transition:background .2s,color .2s,transform .15s;
+  flex-shrink:0;
 }
+.info>*:not(.add){flex-shrink:0}
 .add:hover{background:var(--forest);color:white}
 .add:active{transform:scale(.96)}
 .add:disabled{background:#f1f1f1;border-color:#e2e2e2;color:#9aa2a6;cursor:not-allowed}
@@ -6181,8 +6194,8 @@ body {
 .new-arrivals-heading h2 {
     margin: 0;
 
-    font-family: inherit;
-    font-size: clamp(38px, 4vw, 62px);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: clamp(18px, 4vw, 32px);
     font-weight: 700;
     line-height: 1.05;
 
@@ -6224,8 +6237,8 @@ body {
 
 .new-arrivals-prev,
 .new-arrivals-next {
-    width: 48px;
-    height: 48px;
+    width: 28px;
+    height: 28px;
 
     border-radius: 50%;
 
@@ -6263,7 +6276,7 @@ body {
 /* VIEW ALL */
 
 .new-arrivals-view-all {
-    min-height: 48px;
+    min-height: 28px;
 
     padding: 0 24px;
 
@@ -6798,7 +6811,7 @@ body {
 
 
     .new-arrivals-heading h2 {
-        font-size: 40px;
+        font-size: 20px;
     }
 
 }
@@ -6814,7 +6827,7 @@ body {
 
 
     .new-arrivals-heading h2 {
-        font-size: 34px;
+        font-size: 20px;
     }
 
 
@@ -6825,15 +6838,15 @@ body {
 
     .new-arrivals-prev,
     .new-arrivals-next {
-        width: 42px;
-        height: 42px;
+        width: 28px;
+        height: 28px;
     }
 
 
     .new-arrivals-view-all {
         padding: 0 16px;
 
-        font-size: 12px;
+        font-size: 7px;
     }
 
 
