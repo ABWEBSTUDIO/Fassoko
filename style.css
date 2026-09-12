@@ -979,7 +979,9 @@ body.loading{
 
 /* ---------- sidebar ---------- */
 .shop-sidebar{
-  position:sticky;top:16px;
+  position:sticky;top:138px;
+  max-height:calc(100vh - 154px);
+  overflow-y:auto;
   background:#fff;border:1px solid var(--line);border-radius:18px;
   padding:22px;
 }
@@ -1065,6 +1067,34 @@ body.loading{
   padding:60px 20px;border:1px dashed var(--line);border-radius:16px;
 }
 
+/* ---------- shop pagination ---------- */
+.pagination{
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+  gap:8px;margin:36px 0 10px;
+}
+.pagination[hidden]{display:none}
+.page-btn{
+  min-width:36px;height:36px;padding:0 4px;
+  border:1px solid var(--line);border-radius:50%;
+  background:#fff;color:var(--ink);
+  font-family:inherit;font-size:12.5px;font-weight:700;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color .2s,background .2s,color .2s,transform .2s var(--ease);
+}
+.page-btn:hover{border-color:var(--forest);color:var(--forest)}
+.page-btn.active{
+  background:var(--mango);border-color:var(--mango);color:#fff;
+}
+.page-btn.active:hover{color:#fff}
+.page-btn.page-arrow{color:var(--ink-soft)}
+.page-dots{
+  min-width:24px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--ink-soft);font-size:13px;
+}
+@media(max-width:480px){
+  .page-btn{min-width:32px;height:32px;font-size:11.5px}
+}
+
 /* ---------- recently viewed ---------- */
 .recently-viewed-section{padding:10px 0 60px}
 .rv-head{margin-bottom:18px}
@@ -1073,7 +1103,7 @@ body.loading{
 /* ---------- shop page responsive ---------- */
 @media(max-width:950px){
   .shop-layout{grid-template-columns:1fr}
-  .shop-sidebar{position:static}
+  .shop-sidebar{position:static;max-height:none;overflow-y:visible}
   .shop-grid{grid-template-columns:repeat(3,1fr)}
   .shop-hero h1{font-size:30px}
 }
@@ -1901,7 +1931,7 @@ html,
 body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 * {
@@ -4223,7 +4253,7 @@ html,
 body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 * {

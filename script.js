@@ -144,6 +144,10 @@ let maxPrice=null;
 let inStockOnly=false;
 let activeBrands=new Set();
 
+const PRODUCTS_PER_PAGE=40;
+let currentPage=1;
+let _lastShopFilterKey=null;
+
 const money=n=>n.toLocaleString()+" RWF";
 function escapeHtml(value) {
 
@@ -1092,11 +1096,41 @@ function renderShopGrid(){
 
 
   // ==========================================
+  // PAGINATE — 40 products per page, reset to
+  // page 1 whenever the active filters/search/
+  // sort change (but not on a plain page click)
+  // ==========================================
+
+  const filterKey = JSON.stringify({
+    activeGroup, activeSubcategory, searchTerm,
+    minPrice, maxPrice, inStockOnly,
+    brands: [...activeBrands].sort(),
+    sortMode
+  });
+
+  if(filterKey !== _lastShopFilterKey){
+    currentPage = 1;
+    _lastShopFilterKey = filterKey;
+  }
+
+  const totalPages = Math.max(1, Math.ceil(list.length / PRODUCTS_PER_PAGE));
+  if(currentPage > totalPages) currentPage = totalPages;
+  if(currentPage < 1) currentPage = 1;
+
+  const pageList = list.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE
+  );
+
+
+  // ==========================================
   // DISPLAY PRODUCTS
   // ==========================================
 
   grid.innerHTML =
-    list.map(productCard).join("");
+    pageList.map(productCard).join("");
+
+  renderShopPagination(currentPage, totalPages);
 
 
   // ==========================================
@@ -1248,6 +1282,73 @@ function renderShopGrid(){
 
   }
 
+}
+
+/* ============================================================
+   SHOP PAGE PAGINATION — numbered pages, 40 products each
+   ============================================================ */
+function buildPaginationItems(current, total){
+  if(total <= 1) return [];
+
+  const pages = new Set([1, total]);
+  for(let i = current - 1; i <= current + 1; i++){
+    if(i >= 1 && i <= total) pages.add(i);
+  }
+  if(total >= 3){
+    pages.add(total - 1);
+    pages.add(total - 2 >= 1 ? total - 2 : total - 1);
+  }
+
+  const sorted = [...pages].filter(p => p >= 1 && p <= total).sort((a,b)=>a-b);
+
+  const items = [];
+  let prev = 0;
+  sorted.forEach(p => {
+    if(prev){
+      if(p - prev === 2){
+        items.push({type:"page", num: prev + 1});
+      } else if(p - prev > 2){
+        items.push({type:"dots"});
+      }
+    }
+    items.push({type:"page", num:p});
+    prev = p;
+  });
+  return items;
+}
+
+function renderShopPagination(current, total){
+  const nav = document.getElementById("shopPagination");
+  if(!nav) return;
+
+  if(total <= 1){
+    nav.innerHTML = "";
+    nav.hidden = true;
+    return;
+  }
+  nav.hidden = false;
+
+  const items = buildPaginationItems(current, total);
+
+  let html = "";
+
+  if(current > 1){
+    html += `<button class="page-btn page-arrow" data-page="${current-1}" aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button>`;
+  }
+
+  items.forEach(item => {
+    if(item.type === "dots"){
+      html += `<span class="page-dots">…</span>`;
+    } else {
+      html += `<button class="page-btn${item.num===current?" active":""}" data-page="${item.num}" aria-label="Page ${item.num}"${item.num===current?' aria-current="page"':""}>${item.num}</button>`;
+    }
+  });
+
+  if(current < total){
+    html += `<button class="page-btn page-arrow" data-page="${current+1}" aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button>`;
+  }
+
+  nav.innerHTML = html;
 }
 
 function setActiveGroup(
@@ -1708,6 +1809,20 @@ activeSubcategory =
       if(!cb) return;
       cb.checked?activeBrands.add(cb.value):activeBrands.delete(cb.value);
       renderShopGrid();
+    });
+  }
+
+  /* pagination */
+  const paginationEl=document.getElementById("shopPagination");
+  if(paginationEl){
+    paginationEl.addEventListener("click",e=>{
+      const btn=e.target.closest(".page-btn");
+      if(!btn) return;
+      const page=Number(btn.dataset.page);
+      if(!page || page===currentPage) return;
+      currentPage=page;
+      renderShopGrid();
+      document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});
     });
   }
 

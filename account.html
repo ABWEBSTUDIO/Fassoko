@@ -1,1022 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Account | Fassoko</title>
 
   <!-- Main website CSS -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Account/mobile CSS loaded LAST so it can override shared styles -->
-  <link rel="stylesheet" href="account.css?v=20260905">
+  <!-- Account CSS loaded LAST so it can override shared styles -->
+  <link rel="stylesheet" href="account.css?v=20260912">
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-  >
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
-
 <body>
-
 
   <!-- ======================================
        HEADER
   ======================================= -->
-
-<header class="account-site-header">
-
-  <div class="account-header-inner">
-
-    <a class="brand" href="index.html">
- <img src="images/favicon.png" alt="" style="height: 60px; width: 90px;">
-</a>
-
-    <!-- NAVIGATION -->
-
-    <nav class="account-header-nav">
-
-      <a href="index.html">
-
-        <i class="fa-solid fa-house"></i>
-
-        <span>Home</span>
-
+  <header class="acct-header">
+    <div class="acct-header-inner">
+      <a class="acct-brand" href="index.html">
+        <img src="images/favicon.png" alt="Fassoko">
       </a>
 
+      <nav class="acct-nav" aria-label="Primary">
+        <a href="index.html"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="shop.html"><i class="fa-solid fa-store"></i><span>Shop</span></a>
+        <a href="wishlist.html"><i class="fa-regular fa-heart"></i><span>Wishlist</span></a>
+        <a href="account.html" class="is-active"><i class="fa-solid fa-user"></i><span>Account</span></a>
+      </nav>
 
-      <a href="shop.html">
-
-        <i class="fa-solid fa-store"></i>
-
-        <span>Shop</span>
-
-      </a>
-
-
-      <a href="wishlist.html">
-
-        <i class="fa-solid fa-heart"></i>
-
-        <span>Wishlist</span>
-
-      </a>
-
-
-      <a
-        href="account.html"
-        class="active"
-      >
-
-        <i class="fa-solid fa-user"></i>
-
-        <span>Account</span>
-
-      </a>
-
-    </nav>
-
-
-    <!-- RIGHT SIDE -->
-
-    <div class="account-header-actions">
-
-      <a
-        href="index.html#cart"
-        class="account-header-cart"
-        aria-label="Shopping cart"
-      >
-
-        <i class="fa-solid fa-cart-shopping"></i>
-
-        <span id="cartCount">
-          0
-        </span>
-
-      </a>
-
-
-      <a
-        href="index.html"
-        class="account-back-shopping"
-      >
-
-        Continue shopping
-
-        <i class="fa-solid fa-arrow-right"></i>
-
-      </a>
-
-    </div>
-
-  </div>
-
-</header>
-
-
-
-  <!-- ======================================
-       ACCOUNT PAGE
-  ======================================= -->
-
-  <main class="account-page">
-
-
-    <div class="wrap">
-
-
-      <!-- Loading -->
-   
-
-      <!-- Not logged in -->
-      <section
-        id="notLoggedIn"
-        class="account-login-required"
-        hidden
-      >
-
-        <div class="account-login-icon">
-
-          <i class="fa-solid fa-lock"></i>
-
-        </div>
-
-
-        <h1>
-          Sign in to your account
-        </h1>
-
-
-        <p>
-          Please log in to view your profile,
-          orders and account information.
-        </p>
-
-
-        <a
-          href="login.html"
-          class="account-primary-btn"
-        >
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Login
+      <div class="acct-header-actions">
+        <a href="index.html#cart" class="acct-cart-pill" aria-label="Shopping cart">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span id="cartCount">0</span>
         </a>
+        <a href="index.html" class="acct-continue-link">
+          Continue shopping <i class="fa-solid fa-arrow-right-long"></i>
+        </a>
+      </div>
+    </div>
+  </header>
 
+  <main class="acct-page">
+    <div class="acct-wrap">
+
+      <!-- ================================
+           NOT LOGGED IN
+      ================================= -->
+      <section id="notLoggedIn" class="acct-gate" hidden>
+        <div class="acct-gate-mark"><i class="fa-solid fa-lock"></i></div>
+        <h1>Sign in to see your account</h1>
+        <p>Your profile, saved addresses and order history live here once you're signed in.</p>
+        <a href="login.html" class="btn-primary">
+          <i class="fa-solid fa-right-to-bracket"></i> Log in
+        </a>
       </section>
 
+      <!-- ================================
+           ACCOUNT CONTENT
+      ================================= -->
+      <div id="accountContent" hidden>
 
-
-      <!-- Main account -->
-      <div
-        id="accountContent"
-        hidden
-      >
-
-        <!-- ==================================
-             MOBILE ACCOUNT LAYOUT
-             Visual mobile-only presentation.
-             Existing desktop dashboard remains untouched.
-        =================================== -->
-        <section class="mobile-account-layout" aria-label="Account">
-
-          <div class="mobile-account-title">Account</div>
-
-          <div class="mobile-account-profile">
-            <div class="mobile-account-avatar" aria-hidden="true">
-              <i class="fa-solid fa-user"></i>
-            </div>
-
-            <div class="mobile-account-profile-copy">
-              <strong id="mobileAccountName">Customer</strong>
-              <span id="mobileAccountEmail">Not added</span>
-              <button type="button" id="mobileViewProfile">View Profile <i class="fa-solid fa-chevron-right"></i></button>
+        <!-- WELCOME + STATS -->
+        <section class="acct-hero">
+          <div class="acct-hero-who">
+            <div class="acct-avatar" id="accountInitial" aria-hidden="true">A</div>
+            <div>
+              <p class="acct-hero-eyebrow">Your account</p>
+              <h1>Hi, <span id="welcomeName">there</span></h1>
+              <p class="acct-hero-sub" id="sidebarJoined">Welcome back</p>
             </div>
           </div>
 
-          <section class="mobile-account-section">
-            <h2>My Account</h2>
-
-            <button type="button" class="mobile-account-row" id="mobileProfileInfo">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-user"></i></span>
-              <span>Profile Information</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-
-            <button type="button" class="mobile-account-row" id="mobileAddresses">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-compass"></i></span>
-              <span>Address Book</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-
-            <button type="button" class="mobile-account-row" id="mobilePayment">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-credit-card"></i></span>
-              <span>Payment Methods</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-
-            <button type="button" class="mobile-account-row" id="mobileOrders">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-clipboard"></i></span>
-              <span>My Orders</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-
-            <a href="wishlist.html" class="mobile-account-row">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-heart"></i></span>
-              <span>Wishlist</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </a>
-
-            <button type="button" class="mobile-account-row" id="mobileReviews">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-star"></i></span>
-              <span>My Reviews</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-
-            <button type="button" class="mobile-account-row" id="mobileNotifications">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-bell"></i></span>
-              <span>Notifications</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-          </section>
-
-          <section class="mobile-account-section mobile-account-support">
-            <h2>Support</h2>
-
-            <button type="button" class="mobile-account-row" id="mobileHelpCenter">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-circle-question"></i></span>
-              <span>Help Center</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-
-            <a href="mailto:support@fassoko.com" class="mobile-account-row">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-message"></i></span>
-              <span>Contact Us</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </a>
-
-            <button type="button" class="mobile-account-row" id="mobileFaqs">
-              <span class="mobile-account-row-icon"><i class="fa-regular fa-circle-question"></i></span>
-              <span>FAQs</span>
-              <i class="fa-solid fa-chevron-right mobile-account-chevron"></i>
-            </button>
-          </section>
-
-          <button type="button" id="mobileLogoutBtn" class="mobile-account-logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Logout
-          </button>
-
-        </section>
-
-        <!-- ==================================
-             WELCOME BANNER
-        =================================== -->
-
-        <section class="account-welcome-banner">
-
-          <div>
-            <p class="account-small-title">
-              MY ACCOUNT
-            </p>
-
-            <h1>
-              Hello,
-              <span id="welcomeName">
-                Customer
-              </span>
-              👋
-            </h1>
-
-            <p>
-              Manage your profile, orders and account
-              settings all in one place.
-            </p>
-
-          </div>
-
-          <div class="welcome-art" aria-hidden="true">
-
-            <div class="welcome-art-icon">
+          <div class="acct-stats" role="list">
+            <button type="button" class="acct-stat" data-tab="orders" role="listitem">
               <i class="fa-solid fa-bag-shopping"></i>
-            </div>
-
-            <div class="welcome-art-icon welcome-art-box">
+              <div><strong id="statTotalOrders">0</strong><span>Orders</span></div>
+            </button>
+            <button type="button" class="acct-stat" data-tab="orders" role="listitem">
               <i class="fa-solid fa-box"></i>
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- ==================================
-             STAT CARDS
-        =================================== -->
-
-        <div class="stat-cards">
-
-          <a href="#myOrders" class="stat-card">
-            <div class="stat-icon stat-icon-green">
-              <i class="fa-solid fa-bag-shopping"></i>
-            </div>
-            <div class="stat-info">
-              <strong id="statTotalOrders">0</strong>
-              <span>Total Orders</span>
-            </div>
-            <span class="stat-link">
-              View all orders <i class="fa-solid fa-arrow-right"></i>
-            </span>
-          </a>
-
-          <a href="#myOrders" class="stat-card">
-            <div class="stat-icon stat-icon-orange">
-              <i class="fa-solid fa-box"></i>
-            </div>
-            <div class="stat-info">
-              <strong id="statPendingOrders">0</strong>
-              <span>Pending Orders</span>
-            </div>
-            <span class="stat-link stat-link-orange">
-              Track orders <i class="fa-solid fa-arrow-right"></i>
-            </span>
-          </a>
-
-          <a href="#myOrders" class="stat-card">
-            <div class="stat-icon stat-icon-green">
+              <div><strong id="statPendingOrders">0</strong><span>Pending</span></div>
+            </button>
+            <button type="button" class="acct-stat" data-tab="orders" role="listitem">
               <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div class="stat-info">
-              <strong id="statDeliveredOrders">0</strong>
-              <span>Delivered Orders</span>
-            </div>
-            <span class="stat-link">
-              View history <i class="fa-solid fa-arrow-right"></i>
-            </span>
-          </a>
-
-          <a href="wishlist.html" class="stat-card">
-            <div class="stat-icon stat-icon-green">
-              <i class="fa-solid fa-heart"></i>
-            </div>
-            <div class="stat-info">
-              <strong id="statWishlistItems">0</strong>
-              <span>Wishlist Items</span>
-            </div>
-            <span class="stat-link">
-              View wishlist <i class="fa-solid fa-arrow-right"></i>
-            </span>
-          </a>
-
-        </div>
-
-
-        <!-- ==================================
-             SIDEBAR + MAIN SHELL
-        =================================== -->
-
-        <div class="account-shell">
-
-          <!-- SIDEBAR -->
-          <aside class="account-sidebar">
-
-            <div class="sidebar-profile">
-
-              <div class="sidebar-avatar">
-                <span id="accountInitial">A</span>
-              </div>
-
-              <strong id="sidebarName">Customer</strong>
-              <small id="sidebarJoined">Member</small>
-
-            </div>
-
-            <nav class="sidebar-nav">
-
-              <a href="#overview" class="sidebar-nav-item active">
-                <i class="fa-solid fa-house"></i> Overview
-              </a>
-
-              <a href="#myOrders" class="sidebar-nav-item">
-                <i class="fa-solid fa-box"></i> My Orders
-              </a>
-
-              <a href="wishlist.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-heart"></i> Wishlist
-              </a>
-
-              <a href="#" id="navProfileInfo" class="sidebar-nav-item">
-                <i class="fa-solid fa-user"></i> Profile Information
-              </a>
-
-              <a href="#" id="navAddresses" class="sidebar-nav-item">
-                <i class="fa-solid fa-location-dot"></i> Addresses
-              </a>
-
-              <a href="#" id="navPayment" class="sidebar-nav-item">
-                <i class="fa-solid fa-credit-card"></i> Payment Methods
-              </a>
-
-              <a href="#" id="navNotifications" class="sidebar-nav-item">
-                <i class="fa-solid fa-bell"></i> Notifications
-              </a>
-
-              <a href="#" id="navSettings" class="sidebar-nav-item">
-                <i class="fa-solid fa-gear"></i> Settings
-              </a>
-
-            </nav>
-
-            <div class="sidebar-help">
-              <strong>Need Help?</strong>
-              <small>We're here to help</small>
-              <a href="mailto:support@fassoko.com">
-                Contact Support <i class="fa-solid fa-arrow-right"></i>
-              </a>
-            </div>
-
-            <button
-              id="logoutBtn"
-              type="button"
-              class="sidebar-logout"
-            >
-              <i class="fa-solid fa-right-from-bracket"></i>
-              Logout
+              <div><strong id="statDeliveredOrders">0</strong><span>Delivered</span></div>
             </button>
+            <a href="wishlist.html" class="acct-stat" role="listitem">
+              <i class="fa-solid fa-heart"></i>
+              <div><strong id="statWishlistItems">0</strong><span>Wishlist</span></div>
+            </a>
+          </div>
+        </section>
 
-          </aside>
+        <!-- TABS -->
+        <nav class="acct-tabs" aria-label="Account sections">
+          <button type="button" class="acct-tab is-active" data-tab="overview">Overview</button>
+          <button type="button" class="acct-tab" data-tab="orders">My orders</button>
+          <button type="button" class="acct-tab" data-tab="profile">Profile</button>
+        </nav>
 
+        <!-- ============================
+             OVERVIEW TAB
+        ============================= -->
+        <section class="acct-panel is-active" id="tab-overview" data-panel="overview">
 
-          <!-- MAIN -->
-          <div class="account-main">
-
-            <div class="account-content-grid">
-
-              <!-- ==============================
-                   PROFILE
-              =============================== -->
-
-              <section class="account-card" id="overview">
-
-                <div class="account-card-head">
-
-                  <div>
-                    <p class="account-card-label">
-                      PROFILE INFORMATION
-                    </p>
-                    <h2>Personal details</h2>
-                  </div>
-
-                  <button
-                    id="editProfileButton"
-                    class="account-edit-btn"
-                    type="button"
-                  >
-                    <i class="fa-solid fa-pen"></i>
-                    Edit Profile
-                  </button>
-
-                </div>
-
-                <div class="profile-details">
-
-                  <div class="profile-row">
-                    <div class="profile-icon">
-                      <i class="fa-solid fa-user"></i>
-                    </div>
-                    <div>
-                      <small>Full Name</small>
-                      <strong id="profileName">-</strong>
-                    </div>
-                  </div>
-
-                  <div class="profile-row">
-                    <div class="profile-icon">
-                      <i class="fa-solid fa-phone"></i>
-                    </div>
-                    <div>
-                      <small>Phone Number</small>
-                      <strong id="profilePhone">Not added</strong>
-                    </div>
-                  </div>
-
-                  <div class="profile-row">
-                    <div class="profile-icon">
-                      <i class="fa-solid fa-envelope"></i>
-                    </div>
-                    <div>
-                      <small>Email Address</small>
-                      <strong id="profileEmail">Not added</strong>
-                    </div>
-                  </div>
-
-                  <div class="profile-row">
-                    <div class="profile-icon">
-                      <i class="fa-solid fa-location-dot"></i>
-                    </div>
-                    <div>
-                      <small>Default Address</small>
-                      <strong id="profileAddress">No saved address yet</strong>
-                    </div>
-                  </div>
-
-                </div>
-
-              </section>
-
-
-              <!-- ==============================
-                   QUICK ACTIONS + SPECIAL OFFER
-              =============================== -->
-
-              <div class="account-side-col">
-
-                <section class="account-card quick-actions-card">
-
-                  <p class="account-card-label">
-                    <i class="fa-solid fa-bolt"></i> QUICK ACTIONS
-                  </p>
-
-                  <div class="quick-actions-list">
-
-                    <a href="#myOrders" class="quick-action-item">
-                      <div class="quick-action-icon qa-green">
-                        <i class="fa-solid fa-bag-shopping"></i>
-                      </div>
-                      <div>
-                        <strong>My Orders</strong>
-                        <small>View and track your orders</small>
-                      </div>
-                      <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-
-                    <a href="wishlist.html" class="quick-action-item">
-                      <div class="quick-action-icon qa-orange">
-                        <i class="fa-solid fa-heart"></i>
-                      </div>
-                      <div>
-                        <strong>Wishlist</strong>
-                        <small>See items you've saved</small>
-                      </div>
-                      <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-
-                    <a href="#" id="qaAddresses" class="quick-action-item">
-                      <div class="quick-action-icon qa-green">
-                        <i class="fa-solid fa-location-dot"></i>
-                      </div>
-                      <div>
-                        <strong>Addresses</strong>
-                        <small>Manage your delivery addresses</small>
-                      </div>
-                      <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-
-                    <a href="#" id="qaPayment" class="quick-action-item quick-action-soon">
-                      <div class="quick-action-icon qa-orange">
-                        <i class="fa-solid fa-credit-card"></i>
-                      </div>
-                      <div>
-                        <strong>Payment Methods</strong>
-                        <small>Coming soon</small>
-                      </div>
-                      <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-
-                  </div>
-
-                </section>
-
-                <section class="special-offer-banner">
-                  <i class="fa-solid fa-tags offer-icon"></i>
-                  <strong>Special Offers</strong>
-                  <p>Check out exclusive deals just for you!</p>
-                  <a href="shop.html" class="offer-btn">
-                    Explore Deals <i class="fa-solid fa-arrow-right"></i>
-                  </a>
-                </section>
-
+          <div class="acct-grid">
+            <a href="#" class="quick-card" data-tab="orders">
+              <div class="quick-card-icon qc-green"><i class="fa-solid fa-bag-shopping"></i></div>
+              <div>
+                <strong>My orders</strong>
+                <span>Track deliveries and past purchases</span>
               </div>
+              <i class="fa-solid fa-chevron-right"></i>
+            </a>
 
-            </div>
-
-
-            <!-- ==================================
-                 MY ORDERS
-            =================================== -->
-
-            <section
-              id="myOrders"
-              class="account-card orders-card"
-            >
-
-              <div class="mobile-orders-title">Orders</div>
-
-              <button type="button" id="mobileOrdersBack" class="mobile-orders-back">
-                <i class="fa-solid fa-arrow-left"></i> Back to Account
-              </button>
-
-              <div class="account-card-head">
-
-                <div>
-                  <p class="account-card-label">
-                    ORDER HISTORY
-                  </p>
-                  <h2>Recent Orders</h2>
-                </div>
-
-                <span id="ordersCount" class="orders-count">
-                  0 orders
-                </span>
-
+            <a href="wishlist.html" class="quick-card">
+              <div class="quick-card-icon qc-gold"><i class="fa-solid fa-heart"></i></div>
+              <div>
+                <strong>Wishlist</strong>
+                <span>Items you've saved for later</span>
               </div>
+              <i class="fa-solid fa-chevron-right"></i>
+            </a>
 
-              <div class="mobile-order-filters" id="mobileOrderFilters" aria-label="Order filters">
-                <button type="button" class="mobile-order-filter active" data-status="all">All</button>
-                <button type="button" class="mobile-order-filter" data-status="pending">Pending</button>
-                <button type="button" class="mobile-order-filter" data-status="processing">Processing</button>
-                <button type="button" class="mobile-order-filter" data-status="shipped">Shipped</button>
-                <button type="button" class="mobile-order-filter" data-status="delivered">Delivered</button>
+            <a href="#" class="quick-card" data-tab="profile">
+              <div class="quick-card-icon qc-green"><i class="fa-solid fa-location-dot"></i></div>
+              <div>
+                <strong>Profile &amp; address</strong>
+                <span>Update your details and delivery address</span>
               </div>
+              <i class="fa-solid fa-chevron-right"></i>
+            </a>
 
-              <div id="ordersLoading" class="orders-loading">
-                <i class="fa-solid fa-spinner fa-spin"></i>
-                Loading orders...
+            <a href="mailto:support@fassoko.com" class="quick-card">
+              <div class="quick-card-icon qc-gold"><i class="fa-solid fa-headset"></i></div>
+              <div>
+                <strong>Get help</strong>
+                <span>Talk to Fassoko support</span>
               </div>
-
-              <div id="ordersList" class="orders-list" hidden></div>
-
-              <div id="noOrders" class="no-orders" hidden>
-
-                <div class="no-orders-icon">
-                  <i class="fa-solid fa-box-open"></i>
-                </div>
-
-                <h3>No orders yet</h3>
-
-                <p>You haven't placed any orders yet.</p>
-
-                <a href="shop.html" class="account-primary-btn">
-                  Start Shopping
-                </a>
-
-              </div>
-
-            </section>
-
+              <i class="fa-solid fa-chevron-right"></i>
+            </a>
           </div>
 
-        </div>
+          <div class="acct-card offer-card">
+            <i class="fa-solid fa-tags"></i>
+            <div>
+              <strong>There are deals waiting for you</strong>
+              <span>Check today's offers across Fassoko.</span>
+            </div>
+            <a href="shop.html" class="btn-ghost">Browse deals</a>
+          </div>
+        </section>
+
+        <!-- ============================
+             ORDERS TAB
+        ============================= -->
+        <section class="acct-panel" id="tab-orders" data-panel="orders">
+
+          <div class="acct-card-head">
+            <div>
+              <p class="acct-card-eyebrow">Order history</p>
+              <h2>My orders</h2>
+            </div>
+            <span id="ordersCount" class="orders-count">0 orders</span>
+          </div>
+
+          <div class="order-filters" id="orderFilters" role="tablist" aria-label="Filter orders by status">
+            <button type="button" class="order-filter is-active" data-status="all">All</button>
+            <button type="button" class="order-filter" data-status="pending">Pending</button>
+            <button type="button" class="order-filter" data-status="processing">Processing</button>
+            <button type="button" class="order-filter" data-status="shipped">Shipped</button>
+            <button type="button" class="order-filter" data-status="delivered">Delivered</button>
+          </div>
+
+          <div id="ordersLoading" class="orders-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading your orders...
+          </div>
+
+          <div id="ordersList" class="orders-list" hidden></div>
+
+          <div id="noOrders" class="no-orders" hidden>
+            <div class="no-orders-icon"><i class="fa-solid fa-box-open"></i></div>
+            <h3>No orders yet</h3>
+            <p>Nothing here yet — your future orders will show up in this list.</p>
+            <a href="shop.html" class="btn-primary">Start shopping</a>
+          </div>
+        </section>
+
+        <!-- ============================
+             PROFILE TAB
+        ============================= -->
+        <section class="acct-panel" id="tab-profile" data-panel="profile">
+
+          <div class="acct-card-head">
+            <div>
+              <p class="acct-card-eyebrow">Profile information</p>
+              <h2>Personal details</h2>
+            </div>
+            <button id="editProfileButton" class="btn-edit" type="button">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
+          </div>
+
+          <div class="profile-rows">
+            <div class="profile-row">
+              <i class="fa-solid fa-user"></i>
+              <div><small>Full name</small><strong id="profileName">-</strong></div>
+            </div>
+            <div class="profile-row">
+              <i class="fa-solid fa-phone"></i>
+              <div><small>Phone number</small><strong id="profilePhone">Not added</strong></div>
+            </div>
+            <div class="profile-row">
+              <i class="fa-solid fa-envelope"></i>
+              <div><small>Email address</small><strong id="profileEmail">Not added</strong></div>
+            </div>
+            <div class="profile-row">
+              <i class="fa-solid fa-location-dot"></i>
+              <div><small>Delivery address</small><strong id="profileAddress">No saved address yet</strong></div>
+            </div>
+          </div>
+
+          <button id="logoutBtn" type="button" class="btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i> Log out
+          </button>
+        </section>
 
       </div>
-
     </div>
-
   </main>
 
-
-
   <!-- ======================================
-       MOBILE FOOTER
+       EDIT PROFILE MODAL
   ======================================= -->
-  <footer class="mobile-site-footer" aria-label="Mobile footer">
-    <div class="mobile-footer-grid">
-      <div class="mobile-footer-brand">
-        <a href="index.html" class="mobile-footer-logo">
-          <img src="images/favicon.png" alt="Fassoko">
-        </a>
-        <p>Your everyday online shopping destination.</p>
-      </div>
-      <div class="mobile-footer-column">
-        <h3>Shop</h3>
-        <a href="shop.html">Shop all</a>
-        <a href="shop.html">Categories</a>
-        <a href="shop.html">Offers</a>
-      </div>
-      <div class="mobile-footer-column">
-        <h3>Help</h3>
-        <a href="mailto:support@fassoko.com">Contact us</a>
-        <a href="shop.html">Delivery information</a>
-        <a href="account.html">FAQs</a>
-      </div>
-      <div class="mobile-footer-column">
-        <h3>Follow us</h3>
-        <a href="#">Facebook</a>
-        <a href="#">Instagram</a>
-        <a href="https://wa.me/">WhatsApp</a>
-      </div>
-    </div>
-    <div class="mobile-footer-bottom">
-      <span>© 2026 Fassoko. All rights reserved.</span>
-    </div>
-  </footer>
+  <div id="editProfileModal" class="acct-modal" hidden>
+    <div class="acct-modal-backdrop" id="editProfileBackdrop"></div>
 
-  <!-- ======================================
-       MOBILE BOTTOM NAVIGATION
-       Orders opens the existing #myOrders.
-  ======================================= -->
-  <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-    <a href="index.html" class="mobile-bottom-nav-item">
-      <i class="fa-solid fa-house"></i><span>Home</span>
-    </a>
-    <a href="https://wa.me/" class="mobile-bottom-nav-item">
-      <i class="fa-brands fa-whatsapp"></i><span>Chat</span>
-    </a>
-    <button type="button" id="mobileBottomCart" class="mobile-bottom-nav-item mobile-bottom-cart">
-      <i class="fa-solid fa-cart-shopping"></i>
-      <span id="mobileBottomCartCount">0</span>
-      <span>Cart</span>
-    </button>
-    <button type="button" id="mobileBottomOrders" class="mobile-bottom-nav-item">
-      <i class="fa-solid fa-box"></i><span>Orders</span>
-    </button>
-    <button type="button" id="mobileBottomWishlist" class="mobile-bottom-nav-item mobile-bottom-wishlist">
-      <i class="fa-regular fa-heart"></i>
-      <span id="mobileBottomWishlistCount">0</span>
-      <span>Wishlist</span>
-    </button>
-  </nav>
-
-  <!-- ======================================
-       TRUST BAND
-  ======================================= -->
-
-  <section class="account-trust-band">
-
-    <div class="wrap trust-band-inner">
-
-      <div class="trust-highlight">
-        <i class="fa-solid fa-percent"></i>
+    <div class="acct-modal-box" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
+      <div class="acct-modal-head">
         <div>
-          <strong>You're saving more with Fassoko!</strong>
-          <span>Enjoy exclusive offers, fast delivery and quality products.</span>
+          <p class="acct-card-eyebrow">My profile</p>
+          <h2 id="editProfileTitle">Edit personal details</h2>
         </div>
+        <button type="button" id="closeEditProfile" class="modal-close" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
-      <div class="trust-item">
-        <i class="fa-solid fa-truck-fast"></i>
-        <div>
-          <strong>Fast Delivery</strong>
-          <span>Quick delivery at your door</span>
+      <form id="editProfileForm">
+        <div class="form-grid">
+          <label>
+            <span>Full name</span>
+            <input id="editFullName" type="text" required placeholder="Your full name">
+          </label>
+          <label>
+            <span>Phone number</span>
+            <input id="editPhone" type="tel" placeholder="07XXXXXXXX">
+          </label>
+          <label class="form-full">
+            <span>Email address</span>
+            <input id="editEmail" type="email" placeholder="you@example.com">
+          </label>
         </div>
-      </div>
 
-      <div class="trust-item">
-        <i class="fa-solid fa-shield-halved"></i>
-        <div>
-          <strong>Secure Payment</strong>
-          <span>100% safe and secure payments</span>
-        </div>
-      </div>
-
-      <div class="trust-item">
-        <i class="fa-solid fa-headset"></i>
-        <div>
-          <strong>24/7 Support</strong>
-          <span>We're here to help you anytime</span>
-        </div>
-      </div>
-
-    </div>
-
-  </section>
-
-
-<!-- =========================================
-     EDIT PROFILE MODAL
-========================================= -->
-
-<div
-  id="editProfileModal"
-  class="account-modal"
-  hidden
->
-
-  <div
-    class="account-modal-backdrop"
-    id="editProfileBackdrop"
-  ></div>
-
-
-  <div
-    class="account-modal-box"
-    role="dialog"
-    aria-modal="true"
-  >
-
-    <div class="account-modal-head">
-
-      <div>
-
-        <p class="account-card-label">
-          MY PROFILE
-        </p>
-
-        <h2>
-          Edit personal details
-        </h2>
-
-      </div>
-
-
-      <button
-        type="button"
-        id="closeEditProfile"
-        class="modal-close"
-        aria-label="Close"
-      >
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-    </div>
-
-
-    <form id="editProfileForm">
-
-
-      <!-- PERSONAL DETAILS -->
-
-      <div class="profile-form-grid">
-
-        <label>
-
-          <span>
-            Full name
-          </span>
-
-          <input
-            id="editFullName"
-            type="text"
-            required
-            placeholder="Your full name"
-          >
-
-        </label>
-
-
-        <label>
-
-          <span>
-            Phone number
-          </span>
-
-          <input
-            id="editPhone"
-            type="tel"
-            placeholder="07XXXXXXXX"
-          >
-
-        </label>
-
-
-        <label class="profile-full-width">
-
-          <span>
-            Email address
-          </span>
-
-          <input
-            id="editEmail"
-            type="email"
-            placeholder="you@example.com"
-          >
-
-        </label>
-
-      </div>
-
-
-      <!-- DELIVERY ADDRESS -->
-
-      <div class="profile-form-section">
-
-        <div class="profile-form-section-title">
-
-          <i class="fa-solid fa-location-dot"></i>
-
-          <div>
-
-            <strong>
-              Default delivery address
-            </strong>
-
-            <small>
-              This address can be used for your future orders.
-            </small>
-
+        <div class="form-section">
+          <div class="form-section-title">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <strong>Default delivery address</strong>
+              <small>Used to speed up checkout on future orders.</small>
+            </div>
           </div>
 
+          <div class="form-grid">
+            <label>
+              <span>District</span>
+              <input id="editDistrict" type="text" placeholder="e.g. Gasabo">
+            </label>
+            <label>
+              <span>Area</span>
+              <input id="editArea" type="text" placeholder="e.g. Remera">
+            </label>
+            <label class="form-full">
+              <span>Detailed address</span>
+              <textarea id="editAddress" rows="3" placeholder="Street, building, landmark or other details"></textarea>
+            </label>
+          </div>
         </div>
 
+        <p id="profileSaveMessage" class="profile-save-message"></p>
 
-        <div class="profile-form-grid">
-
-          <label>
-
-            <span>
-              District
-            </span>
-
-            <input
-              id="editDistrict"
-              type="text"
-              placeholder="e.g. Gasabo"
-            >
-
-          </label>
-
-
-          <label>
-
-            <span>
-              Area
-            </span>
-
-            <input
-              id="editArea"
-              type="text"
-              placeholder="e.g. Remera"
-            >
-
-          </label>
-
-
-          <label class="profile-full-width">
-
-            <span>
-              Detailed address
-            </span>
-
-            <textarea
-              id="editAddress"
-              rows="3"
-              placeholder="Street, building, landmark or other details"
-            ></textarea>
-
-          </label>
-
+        <div class="acct-modal-actions">
+          <button type="button" id="cancelEditProfile" class="btn-ghost">Cancel</button>
+          <button type="submit" id="saveProfileButton" class="btn-primary">
+            <i class="fa-solid fa-check"></i> Save changes
+          </button>
         </div>
-
-      </div>
-
-
-      <p
-        id="profileSaveMessage"
-        class="profile-save-message"
-      ></p>
-
-
-      <div class="account-modal-actions">
-
-        <button
-          type="button"
-          id="cancelEditProfile"
-          class="account-secondary-btn"
-        >
-          Cancel
-        </button>
-
-
-        <button
-          type="submit"
-          id="saveProfileButton"
-          class="account-primary-btn"
-        >
-
-          <i class="fa-solid fa-check"></i>
-
-          Save changes
-
-        </button>
-
-      </div>
-
-    </form>
-
+      </form>
+    </div>
   </div>
-
-</div>
 
   <!-- ======================================
        SUPABASE
   ======================================= -->
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script src="supabase-config.js"></script>
-
   <script src="account.js"></script>
 
-
 </body>
-
 </html>
