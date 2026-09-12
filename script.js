@@ -80,8 +80,16 @@ async function loadProducts() {
     renderProductPage();
   }
 
+  // Wishlist (page + drawer): products load from Supabase after
+  // the wishlist ids are already read from localStorage, so both
+  // need a re-render here once real product data exists — otherwise
+  // a saved wishlist can render as empty until some unrelated
+  // wishlist action happens to trigger a re-render.
   if (typeof renderWishlistPage === "function") {
     renderWishlistPage();
+  }
+  if (typeof renderWishlistDrawer === "function") {
+    renderWishlistDrawer();
   }
 
   // Homepage: render only after Supabase data is ready.
@@ -137,7 +145,16 @@ loadCategories();
 const STOCK_LABEL={in:"In stock",low:"Low stock",out:"Sold out"};
 
 let cart=JSON.parse(localStorage.getItem("abamartCart")||"[]");
-let wishlist=JSON.parse(localStorage.getItem("abamartWishlist")||"[]");
+
+// Wishlist ids are always normalized to Number and de-duplicated the
+// moment they're read from storage, so every later comparison
+// (isWishlisted, drawer lookups, page lookups) can safely use ===
+// without worrying whether an id came in as "12" or 12.
+let wishlist=[...new Set(
+  (JSON.parse(localStorage.getItem("abamartWishlist")||"[]"))
+    .map(Number)
+    .filter(id=>Number.isFinite(id))
+)];
 let activeGroup = null;
 let activeSubcategory = null;
 
@@ -190,21 +207,38 @@ function update(){
   if(typeof isCartPage!=="undefined" && isCartPage) renderCartPage();
 }
 
-/* ---------- wishlist ---------- */
+/* ============================================================
+   WISHLIST — core (rewritten)
+   Single source of truth: the `wishlist` array (numeric ids,
+   de-duped, persisted to localStorage). Every other wishlist
+   surface — header badge, mobile tab badge, side drawer, and
+   the full wishlist.html page — reads from this array and the
+   live `products` list, so once a product is saved it's saved
+   everywhere, and there's nothing page-specific to keep in sync.
+   ============================================================ */
+
 function saveWishlist(){
   localStorage.setItem("abamartWishlist",JSON.stringify(wishlist));
 }
 
 function isWishlisted(id){
-  return wishlist.includes(id);
+  return wishlist.includes(Number(id));
 }
 
+/* Refreshes every visible wishlist surface: the header/mobile
+   count badges, the side drawer, and — if we're on wishlist.html
+   — the full page grid. Safe to call at any time, including
+   before products have finished loading from Supabase (each
+   renderer guards for that itself). */
 function updateWishlistBadge(){
   document.querySelectorAll(".wishlist-count").forEach(el=>el.textContent=wishlist.length);
   renderWishlistDrawer();
+  if(typeof isWishlistPage!=="undefined" && isWishlistPage) renderWishlistPage();
 }
 
 function toggleWishlist(id){
+  id=Number(id);
+  if(!Number.isFinite(id)) return isWishlisted(id);
   const idx=wishlist.indexOf(id);
   if(idx===-1) wishlist.push(id);
   else wishlist.splice(idx,1);
@@ -232,11 +266,13 @@ function setWishIcon(btn,wished){
 }
 
 function onWishBtnClick(btn,id){
+  // toggleWishlist() already refreshes every wishlist surface
+  // (badges, drawer, and the wishlist page grid) via updateWishlistBadge(),
+  // so this only has to update the one button that was actually clicked.
   const wished=toggleWishlist(id);
   setWishIcon(btn,wished);
   btn.setAttribute("aria-label",wished?"Remove from wishlist":"Add to wishlist");
   toast(wished?"Added to wishlist ♥":"Removed from wishlist");
-  if(typeof isWishlistPage!=="undefined" && isWishlistPage) renderWishlistPage();
 }
 
 function toast(t){
@@ -704,7 +740,13 @@ if(clearCartBtn){
 
 renderCartPage();
 
-/* ---------- side wishlist drawer ---------- */
+/* ============================================================
+   WISHLIST — side drawer (rewritten)
+   Quick-access panel opened from the heart icon in the header
+   / mobile tab bar on every page. Reads the same `wishlist`
+   array and `products` list as the full wishlist page, so it's
+   never out of sync with it.
+   ============================================================ */
 function buildWishlistDrawer(){
   if(document.getElementById("wishlistDrawer")) return;
   const wrap=document.createElement("div");
@@ -731,12 +773,15 @@ function buildWishlistDrawer(){
     const btn=e.target.closest("button");
     if(!btn) return;
     const id=Number(btn.dataset.id);
-    if(!id) return;
+    if(!Number.isFinite(id)) return;
     if(btn.classList.contains("wishlist-drawer-add")){
       add(id);
+      toast("Added to cart ✓");
     }else if(btn.classList.contains("wishlist-drawer-remove")){
-      toggleWishlist(id); // also updates the badge + re-renders this drawer
-      if(typeof isWishlistPage!=="undefined" && isWishlistPage) renderWishlistPage();
+      // toggleWishlist() -> updateWishlistBadge() already re-renders
+      // this drawer (and the wishlist page, if open), so nothing
+      // else needs to happen here besides the confirmation toast.
+      toggleWishlist(id);
       toast("Removed from wishlist");
     }
   });
@@ -756,36 +801,47 @@ function closeWishlistDrawer(){
   document.body.classList.remove("wishlist-open");
 }
 
+/* Resolves the current wishlist ids against the live product
+   catalog. Returns [] (rather than throwing) whenever products
+   haven't loaded yet — every caller already treats an empty
+   array as "nothing to show yet", so this alone doesn't cause
+   the empty-state flash; it's the re-render after loadProducts()
+   finishes that fills the real content in. Also silently drops
+   ids that no longer resolve to a product (deleted / deactivated
+   items) so the drawer and page never show a broken card. */
+function getWishlistedProducts(){
+  if(!Array.isArray(products) || products.length===0) return [];
+  const seenNames=new Set(); // the catalog has a few repeated ids/names
+  const items=[];
+  wishlist.forEach(id=>{
+    const p=products.find(x=>Number(x.id)===id);
+    if(p && !seenNames.has(p.name)){items.push(p);seenNames.add(p.name);}
+  });
+  return items;
+}
+
 function renderWishlistDrawer(){
   const itemsEl=document.getElementById("wishlistDrawerItems");
   if(!itemsEl) return;
 
-  // de-dupe by name (the catalog has a few repeated ids/names)
-  const seenNames=new Set();
-  const items=[];
-  wishlist.forEach(id=>{
-    const p=products.find(x=>x.id===id);
-    if(p && !seenNames.has(p.name)){items.push(p);seenNames.add(p.name);}
-  });
+  const items=getWishlistedProducts();
 
-  if(items.length===0){
-    itemsEl.innerHTML=`<div class="wishlist-drawer-empty"><span>♡</span><p>Your wishlist is empty.</p><a href="shop.html" class="cta-ghost">Start shopping</a></div>`;
-  }else{
-    itemsEl.innerHTML=items.map(p=>{
-      const visual=p.image
-        ? `<img src="${p.image}" alt="${p.name}">`
-        : `<div class="wishlist-drawer-item-emoji" style="background:${p.bg||'#edf6ef'}">${p.emoji||"🛒"}</div>`;
-      return `<div class="wishlist-drawer-item">
-        <div class="wishlist-drawer-item-pic">${visual}</div>
-        <div class="wishlist-drawer-item-body">
-          <b>${p.name}</b>
-          <small>${money(p.price)}</small>
-          <button class="wishlist-drawer-add" data-id="${p.id}">Add to cart</button>
-        </div>
-        <button class="wishlist-drawer-remove" data-id="${p.id}" aria-label="Remove from wishlist">✕</button>
-      </div>`;
-    }).join("");
-  }
+  itemsEl.innerHTML = items.length===0
+    ? `<div class="wishlist-drawer-empty"><span>♡</span><p>Your wishlist is empty.</p><a href="shop.html" class="cta-ghost">Start shopping</a></div>`
+    : items.map(p=>{
+        const visual=p.image
+          ? `<img src="${p.image}" alt="${escapeHtmlAttribute(p.name)}">`
+          : `<div class="wishlist-drawer-item-emoji" style="background:${p.bg||'#edf6ef'}">${p.emoji||"🛒"}</div>`;
+        return `<div class="wishlist-drawer-item">
+          <div class="wishlist-drawer-item-pic">${visual}</div>
+          <div class="wishlist-drawer-item-body">
+            <b>${escapeHtml(p.name)}</b>
+            <small>${money(p.price)}</small>
+            <button class="wishlist-drawer-add" data-id="${p.id}">Add to cart</button>
+          </div>
+          <button class="wishlist-drawer-remove" data-id="${p.id}" aria-label="Remove from wishlist">✕</button>
+        </div>`;
+      }).join("");
 
   const countEl=document.getElementById("wishlistDrawerCount");
   if(countEl) countEl.textContent=items.length;
@@ -3291,31 +3347,57 @@ document.getElementById("pdpAdd").addEventListener("click", () => {
 
 });
 
+  // ==========================================
+  // WISHLIST (previously had no click handler at all)
+  // ==========================================
+
+  const pdpWishBtn = document.getElementById("pdpWish");
+  if (pdpWishBtn) {
+    pdpWishBtn.addEventListener("click", () => {
+      onWishBtnClick(pdpWishBtn, p.id);
+    });
+  }
+
 }
 renderProductPage();
 
 /* ============================================================
-   WISHLIST PAGE (wishlist.html) — lists every saved product
+   WISHLIST PAGE (wishlist.html) — rewritten
+   Lists every saved product. This is the same `wishlist` array
+   and `getWishlistedProducts()` lookup the drawer uses, so the
+   page, the drawer, and the badges can never drift apart.
+
+   Three states, so a full localStorage wishlist never briefly
+   flashes "empty" while Supabase is still fetching the catalog:
+     - loading: ids are saved, but `products` hasn't arrived yet
+     - empty:   there is genuinely nothing saved
+     - filled:  render the cards
    ============================================================ */
 function renderWishlistPage(){
   const grid=document.getElementById("wishlistGrid");
-  if(!grid) return;
-
-  // de-dupe by name (the catalog has a few repeated ids/names)
-  const seenNames=new Set();
-  const items=[];
-  wishlist.forEach(id=>{
-    const p=products.find(x=>x.id===id);
-    if(p && !seenNames.has(p.name)){items.push(p);seenNames.add(p.name);}
-  });
+  if(!grid) return; // not on wishlist.html
 
   const countEl=document.getElementById("wishlistResultCount");
-  if(countEl) countEl.textContent=items.length;
-
   const clearBtn=document.getElementById("clearWishlist");
-  if(clearBtn) clearBtn.hidden=items.length===0;
-
   const emptyEl=document.getElementById("wishlistEmpty");
+  const loadingEl=document.getElementById("wishlistLoading");
+
+  const stillLoading = wishlist.length>0 && (!Array.isArray(products) || products.length===0);
+
+  if(stillLoading){
+    if(loadingEl) loadingEl.hidden=false;
+    if(emptyEl) emptyEl.hidden=true;
+    grid.hidden=true;
+    if(clearBtn) clearBtn.hidden=true;
+    if(countEl) countEl.textContent=wishlist.length;
+    return;
+  }
+
+  const items=getWishlistedProducts();
+
+  if(loadingEl) loadingEl.hidden=true;
+  if(countEl) countEl.textContent=items.length;
+  if(clearBtn) clearBtn.hidden=items.length===0;
   if(emptyEl) emptyEl.hidden=items.length>0;
 
   grid.hidden=items.length===0;
@@ -3329,8 +3411,7 @@ if(clearWishlistBtn){
     if(!confirm("Remove all products from your wishlist?")) return;
     wishlist=[];
     saveWishlist();
-    updateWishlistBadge();
-    renderWishlistPage();
+    updateWishlistBadge(); // re-renders the page, drawer and badges
     toast("Wishlist cleared");
   });
 }

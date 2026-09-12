@@ -10,7 +10,12 @@
 <link rel="shortcut icon" href="images/favicon aba.png" style="border-radius: 5px; height: 20px;">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Shared site styles (cards, header, drawer, wish-btn, etc. all live here already) -->
 <link rel="stylesheet" href="style.css">
+<!-- Wishlist-page-only additions: loading state + small polish. Loaded
+     after style.css and only referenced on this page, so it can't
+     affect anything else on the site. -->
+<link rel="stylesheet" href="style-wishlist.css">
 </head>
 <body>
 
@@ -73,6 +78,17 @@
         <p><b id="wishlistResultCount">0</b> saved products</p>
       </div>
       <button class="sidebar-reset" id="clearWishlist" type="button" hidden>Clear all</button>
+    </div>
+
+    <!-- Shown only while wishlist ids exist in storage but the
+         product catalog hasn't finished loading from Supabase yet.
+         script.js toggles this — never shown at the same time as
+         the grid or the true empty state. -->
+    <div class="wishlist-loading" id="wishlistLoading" hidden>
+      <div class="wishlist-loading-grid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p>Loading your saved items…</p>
     </div>
 
     <div id="wishlistGrid" class="product-grid shop-grid"></div>
