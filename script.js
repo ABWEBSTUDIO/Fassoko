@@ -80,6 +80,10 @@ async function loadProducts() {
     renderProductPage();
   }
 
+  if (typeof renderWishlistPage === "function") {
+    renderWishlistPage();
+  }
+
   // Homepage: render only after Supabase data is ready.
   if (!isShopPage) {
     const homeGrid = document.getElementById("products");
