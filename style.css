@@ -6903,7 +6903,7 @@ body {
    the banner's own aspect ratio removes that gap. */
 @media (max-width:650px){
   .hero{
-    margin-top: 60px;
+    margin-top: 20px;
     min-height:0;
     height:120px;
     width: 100%;
